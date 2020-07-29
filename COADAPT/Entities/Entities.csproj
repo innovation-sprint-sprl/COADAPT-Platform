@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+		<PropertyGroup>
+				<TargetFramework>netcoreapp2.2</TargetFramework>
+		</PropertyGroup>
+
+		<ItemGroup>
+		  <Compile Remove="Migrations\20190731092123_Add_Administrator.cs" />
+		  <Compile Remove="Migrations\20190731092123_Add_Administrator.Designer.cs" />
+		  <Compile Remove="Migrations\20190731111432_Add_SubAdministrator.cs" />
+		  <Compile Remove="Migrations\20190731111432_Add_SubAdministrator.Designer.cs" />
+		  <Compile Remove="Migrations\20191002120830_PersonalInformation.cs" />
+		  <Compile Remove="Migrations\20191002120830_PersonalInformation.Designer.cs" />
+		</ItemGroup>
+
+		<ItemGroup>
+			<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
+			<PackageReference Include="NLog.Extensions.Logging" Version="1.6.1" />
+			<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.6" />
+			<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
+		</ItemGroup>
+
+		<ItemGroup>
+		  <ProjectReference Include="..\ApiModels\ApiModels.csproj" />
+		  <ProjectReference Include="..\Constants\Constants.csproj" />
+		</ItemGroup>
+
+
+</Project>
