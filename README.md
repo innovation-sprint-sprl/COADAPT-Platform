@@ -24,8 +24,8 @@ dotnet ef database update
 ```
 from the terminal while in the COADAPT/UserManagement.WebAPI directory.
 
-## Swagqer API interface
-Upon running the COADAPT platform code, the API is exposed alongside a Swagger interface to explore this API. Since all endpoints are accessible depending on the role of the logged in user, one should start with the Identity controller endpoints to login. The platform is shipped with an administrator account (username admin@coadapt.eu and password a1!B2@c3# ).
+## Swagger API interface
+Upon running the COADAPT platform code, the API is exposed alongside a Swagger interface to explore this API. Since all endpoints are accessible depending on the role of the logged in user, one should start with the Identity controller endpoints to login. The platform is shipped with an administrator account, with username admin@coadapt.eu and password a1!B2@c3# (without any spaces around the strings).
 The first step after logging in is to change the administrator password using the update endpoint for the administrator user. Leave the user name blank (unchanged) and type a new strong password (minimum 6 characters including lowercase, uppercase letters and numbers).
 
 ## Data model
