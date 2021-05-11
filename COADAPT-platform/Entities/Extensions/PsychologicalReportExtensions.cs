@@ -1,0 +1,118 @@
+﻿using Entities.Models;
+using ApiModels;
+
+namespace Entities.Extensions {
+    public static class PsychologicalReportExtensions {
+        public static void Map(this PsychologicalReport dbPsychologicalReport, PsychologicalReport psychologicalReport) {
+            dbPsychologicalReport.ParticipantId = psychologicalReport.ParticipantId;
+            dbPsychologicalReport.IntrinsicFactorsOfWork = psychologicalReport.IntrinsicFactorsOfWork;
+            dbPsychologicalReport.ManagerialRole = psychologicalReport.ManagerialRole;
+            dbPsychologicalReport.RelationshipWithOtherPeople = psychologicalReport.RelationshipWithOtherPeople;
+            dbPsychologicalReport.CareerAndSuccess = psychologicalReport.CareerAndSuccess;
+            dbPsychologicalReport.ClimateAndOrganizationalStructure = psychologicalReport.ClimateAndOrganizationalStructure;
+            dbPsychologicalReport.HomeWorkInterface = psychologicalReport.HomeWorkInterface;
+            dbPsychologicalReport.AttitudeTowardsLife = psychologicalReport.AttitudeTowardsLife;
+            dbPsychologicalReport.StyleOfBehavior = psychologicalReport.StyleOfBehavior;
+            dbPsychologicalReport.Ambition = psychologicalReport.Ambition;
+            dbPsychologicalReport.TypeASynthetic = psychologicalReport.TypeASynthetic;
+            dbPsychologicalReport.TypeATotal = psychologicalReport.TypeATotal;
+            dbPsychologicalReport.OrganizationalForces = psychologicalReport.OrganizationalForces;
+            dbPsychologicalReport.ManagementProcesses = psychologicalReport.ManagementProcesses;
+            dbPsychologicalReport.IndividualInfluences = psychologicalReport.IndividualInfluences;
+            dbPsychologicalReport.LocusOfControlSynthetic = psychologicalReport.LocusOfControlSynthetic;
+            dbPsychologicalReport.LocusOfControlTotal = psychologicalReport.LocusOfControlTotal;
+            dbPsychologicalReport.SocialSupport = psychologicalReport.SocialSupport;
+            dbPsychologicalReport.TaskOrientation = psychologicalReport.TaskOrientation;
+            dbPsychologicalReport.Logical = psychologicalReport.Logical;
+            dbPsychologicalReport.HomeWorkRelationship = psychologicalReport.HomeWorkRelationship;
+            dbPsychologicalReport.Time = psychologicalReport.Time;
+            dbPsychologicalReport.Involvement = psychologicalReport.Involvement;
+            dbPsychologicalReport.CareerSatisfaction = psychologicalReport.CareerSatisfaction;
+            dbPsychologicalReport.JobSatisfaction = psychologicalReport.JobSatisfaction;
+            dbPsychologicalReport.SettingAndOrganizationalStructureSatisfaction = psychologicalReport.SettingAndOrganizationalStructureSatisfaction;
+            dbPsychologicalReport.OrganizationalProcessesSatisfaction = psychologicalReport.OrganizationalProcessesSatisfaction;
+            dbPsychologicalReport.InterpersonalRelationshipsSatisfaction = psychologicalReport.InterpersonalRelationshipsSatisfaction;
+            dbPsychologicalReport.SyntheticJobSatisfaction = psychologicalReport.SyntheticJobSatisfaction;
+            dbPsychologicalReport.TotalJobSatisfaction = psychologicalReport.TotalJobSatisfaction;
+            dbPsychologicalReport.PsychologicalHealth = psychologicalReport.PsychologicalHealth;
+            dbPsychologicalReport.PhysicalHealth = psychologicalReport.PhysicalHealth;
+            dbPsychologicalReport.GlobalSeverityIndex = psychologicalReport.GlobalSeverityIndex;
+            dbPsychologicalReport.PositiveSymptomTotal = psychologicalReport.PositiveSymptomTotal;
+            dbPsychologicalReport.PositiveSymptomDistressIndex = psychologicalReport.PositiveSymptomDistressIndex;
+            dbPsychologicalReport.Somatization = psychologicalReport.Somatization;
+            dbPsychologicalReport.ObsessivenessCompulsiveness = psychologicalReport.ObsessivenessCompulsiveness;
+            dbPsychologicalReport.InterpersonalHypersensitivity = psychologicalReport.InterpersonalHypersensitivity;
+            dbPsychologicalReport.Depression = psychologicalReport.Depression;
+            dbPsychologicalReport.Anxiety = psychologicalReport.Anxiety;
+            dbPsychologicalReport.Hostility = psychologicalReport.Hostility;
+            dbPsychologicalReport.PhobicAnxiety = psychologicalReport.PhobicAnxiety;
+            dbPsychologicalReport.ParanoidIdeation = psychologicalReport.ParanoidIdeation;
+            dbPsychologicalReport.Psychoticism = psychologicalReport.Psychoticism;
+            dbPsychologicalReport.PerceivedStressScale = psychologicalReport.PerceivedStressScale;
+            dbPsychologicalReport.SleepProblem = psychologicalReport.SleepProblem;
+            dbPsychologicalReport.TrialUserComments = psychologicalReport.TrialUserComments;
+            dbPsychologicalReport.TherapistComments = psychologicalReport.TherapistComments;
+            dbPsychologicalReport.ThoughtsOnChildren = psychologicalReport.ThoughtsOnChildren;
+            dbPsychologicalReport.ThoughtsOnParents = psychologicalReport.ThoughtsOnParents;
+            dbPsychologicalReport.StressfulEvents = psychologicalReport.StressfulEvents;
+            dbPsychologicalReport.MedicalConditionSelfAssessment = psychologicalReport.MedicalConditionSelfAssessment;
+            dbPsychologicalReport.PsychologicalConditionSelfAssessment = psychologicalReport.PsychologicalConditionSelfAssessment;
+        }
+
+        public static void FromRequest(this PsychologicalReport psychologicalReport, PsychologicalReportRequest request) {
+            psychologicalReport.ParticipantId = request.ParticipantId;
+            psychologicalReport.IntrinsicFactorsOfWork = request.IntrinsicFactorsOfWork;
+            psychologicalReport.ManagerialRole = request.ManagerialRole;
+            psychologicalReport.RelationshipWithOtherPeople = request.RelationshipWithOtherPeople;
+            psychologicalReport.CareerAndSuccess = request.CareerAndSuccess;
+            psychologicalReport.ClimateAndOrganizationalStructure = request.ClimateAndOrganizationalStructure;
+            psychologicalReport.HomeWorkInterface = request.HomeWorkInterface;
+            psychologicalReport.AttitudeTowardsLife = request.AttitudeTowardsLife;
+            psychologicalReport.StyleOfBehavior = request.StyleOfBehavior;
+            psychologicalReport.Ambition = request.Ambition;
+            psychologicalReport.TypeASynthetic = request.TypeASynthetic;
+            psychologicalReport.TypeATotal = request.TypeATotal;
+            psychologicalReport.OrganizationalForces = request.OrganizationalForces;
+            psychologicalReport.ManagementProcesses = request.ManagementProcesses;
+            psychologicalReport.IndividualInfluences = request.IndividualInfluences;
+            psychologicalReport.LocusOfControlSynthetic = request.LocusOfControlSynthetic;
+            psychologicalReport.LocusOfControlTotal = request.LocusOfControlTotal;
+            psychologicalReport.SocialSupport = request.SocialSupport;
+            psychologicalReport.TaskOrientation = request.TaskOrientation;
+            psychologicalReport.Logical = request.Logical;
+            psychologicalReport.HomeWorkRelationship = request.HomeWorkRelationship;
+            psychologicalReport.Time = request.Time;
+            psychologicalReport.Involvement = request.Involvement;
+            psychologicalReport.CareerSatisfaction = request.CareerSatisfaction;
+            psychologicalReport.JobSatisfaction = request.JobSatisfaction;
+            psychologicalReport.SettingAndOrganizationalStructureSatisfaction = request.SettingAndOrganizationalStructureSatisfaction;
+            psychologicalReport.OrganizationalProcessesSatisfaction = request.OrganizationalProcessesSatisfaction;
+            psychologicalReport.InterpersonalRelationshipsSatisfaction = request.InterpersonalRelationshipsSatisfaction;
+            psychologicalReport.SyntheticJobSatisfaction = request.SyntheticJobSatisfaction;
+            psychologicalReport.TotalJobSatisfaction = request.TotalJobSatisfaction;
+            psychologicalReport.PsychologicalHealth = request.PsychologicalHealth;
+            psychologicalReport.PhysicalHealth = request.PhysicalHealth;
+            psychologicalReport.GlobalSeverityIndex = request.GlobalSeverityIndex;
+            psychologicalReport.PositiveSymptomTotal = request.PositiveSymptomTotal;
+            psychologicalReport.PositiveSymptomDistressIndex = request.PositiveSymptomDistressIndex;
+            psychologicalReport.Somatization = request.Somatization;
+            psychologicalReport.ObsessivenessCompulsiveness = request.ObsessivenessCompulsiveness;
+            psychologicalReport.InterpersonalHypersensitivity = request.InterpersonalHypersensitivity;
+            psychologicalReport.Depression = request.Depression;
+            psychologicalReport.Anxiety = request.Anxiety;
+            psychologicalReport.Hostility = request.Hostility;
+            psychologicalReport.PhobicAnxiety = request.PhobicAnxiety;
+            psychologicalReport.ParanoidIdeation = request.ParanoidIdeation;
+            psychologicalReport.Psychoticism = request.Psychoticism;
+            psychologicalReport.PerceivedStressScale = request.PerceivedStressScale;
+            psychologicalReport.SleepProblem = request.SleepProblem;
+            psychologicalReport.TrialUserComments = request.TrialUserComments;
+            psychologicalReport.TherapistComments = request.TherapistComments;
+            psychologicalReport.ThoughtsOnChildren = request.ThoughtsOnChildren;
+            psychologicalReport.ThoughtsOnParents = request.ThoughtsOnParents;
+            psychologicalReport.StressfulEvents = request.StressfulEvents;
+            psychologicalReport.MedicalConditionSelfAssessment = request.MedicalConditionSelfAssessment;
+            psychologicalReport.PsychologicalConditionSelfAssessment = request.PsychologicalConditionSelfAssessment;
+        }
+    }
+}
