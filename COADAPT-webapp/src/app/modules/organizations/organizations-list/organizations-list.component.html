@@ -1,0 +1,53 @@
+<div fxLayout="column" fxLayoutAlign=" none">
+
+  <!-- Page Content -->
+  <div>
+    <div class="mb-10" dir="rtl" fxLayoutGap="10px">
+      <a mat-raised-button color="primary" routerLink="/organizations/create">Create</a>
+    </div>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+          <mat-cell *matCellDef="let organization"> {{ organization.name }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="shortname">
+          <mat-header-cell *matHeaderCellDef> Shortname </mat-header-cell>
+          <mat-cell *matCellDef="let organization"> {{ organization.shortname }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="subAdministrator">
+          <mat-header-cell *matHeaderCellDef> SubAdministrator </mat-header-cell>
+          <mat-cell *matCellDef="let organization"> {{ organization.subAdministrator }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="studies">
+          <mat-header-cell *matHeaderCellDef> Studies </mat-header-cell>
+          <mat-cell *matCellDef="let organization"> {{ organization.studies }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="participants">
+          <mat-header-cell *matHeaderCellDef> Participants </mat-header-cell>
+          <mat-cell *matCellDef="let organization"> {{ organization.participants }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell  *matHeaderCellDef [ngClass]="'w-75 th-center'"> Delete </mat-header-cell>
+          <mat-cell *matCellDef="let organization" [ngClass]="'w-75 th-center'" (click)="$event.stopPropagation()">
+            <button mat-icon-button color="primary" (click)="deleteOrganization(organization)">
+              <mat-icon class="material-icons delete">delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editOrganization(row.id)"></mat-row>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+    </div>
+  </div>
+
+</div>

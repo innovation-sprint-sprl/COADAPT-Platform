@@ -1,0 +1,59 @@
+
+<div fxFlex="100">
+  <div class="mb-10" dir="rtl" fxLayoutGap="10px">
+    <a mat-raised-button color="primary" routerLink="/studies/create">Create</a>
+  </div>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell *matCellDef="let study"> {{ study.name }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="shortname">
+        <mat-header-cell *matHeaderCellDef> Shortname </mat-header-cell>
+        <mat-cell *matCellDef="let study"> {{ study.shortname }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="organization">
+        <mat-header-cell *matHeaderCellDef> Organization </mat-header-cell>
+        <mat-cell *matCellDef="let study"> {{ study.organization }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="supervisor">
+        <mat-header-cell *matHeaderCellDef> Supervisor </mat-header-cell>
+        <mat-cell *matCellDef="let study"> {{ study.supervisor }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="sites">
+        <mat-header-cell *matHeaderCellDef> Sites </mat-header-cell>
+        <mat-cell *matCellDef="let study"> {{ study.sites }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="groups">
+        <mat-header-cell *matHeaderCellDef> Groups </mat-header-cell>
+        <mat-cell *matCellDef="let study"> {{ study.groups }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="participants">
+        <mat-header-cell *matHeaderCellDef> Participants </mat-header-cell>
+        <mat-cell *matCellDef="let study"> {{ study.participants }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell  *matHeaderCellDef [ngClass]="'w-75 th-center'"> Delete </mat-header-cell>
+        <mat-cell *matCellDef="let study" [ngClass]="'w-75 th-center'" (click)="$event.stopPropagation()">
+          <button mat-icon-button color="primary" (click)="deleteStudy(study)">
+            <mat-icon class="material-icons delete">delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editStudy(row.id)"></mat-row>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+  </div>
+</div>

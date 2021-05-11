@@ -1,0 +1,30 @@
+<mat-card>
+  <form [formGroup]="createGroupForm" (ngSubmit)="onSubmit()" fxLayout="column" fxLayoutAlign="space-between stretch">
+    <div class="inputs" fxfill fxlayout="collumn" style="height: 100%; min-height: 100%; min-width: 100%; width: 100%; flex-direction: column; box-sizing: border-box; display: flex;">
+      <mat-form-field appearance="fill">
+        <mat-label>Group name</mat-label>
+        <input matInput formControlName="name" type="text" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Group short name</mat-label>
+        <input matInput formControlName="shortName" type="text" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Study</mat-label>
+        <mat-select formControlName="studyId" required>
+          <mat-option *ngFor="let study of studies" [value]="study.id">
+            {{study.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div dir="rtl">
+      <button mat-raised-button color="primary" [disabled]="loading" type="submit">Create</button>
+      <a class="cancel-button" mat-raised-button routerLink="/groups">Cancel</a>
+    </div>
+    <p fxfill fxlayout="column" style="height: 100%; min-height: 100%; min-width: 100%; width: 100%; flex-direction: column; box-sizing: border-box; display: flex;" *ngIf="error" class="error">{{ error }}</p>
+  </form>
+</mat-card>

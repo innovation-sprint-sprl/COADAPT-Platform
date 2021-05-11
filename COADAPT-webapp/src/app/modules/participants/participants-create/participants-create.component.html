@@ -1,0 +1,145 @@
+<mat-card>
+  <form [formGroup]="createParticipantForm" (ngSubmit)="onSubmit()" fxLayout="column" fxLayoutAlign="space-between stretch">
+    <div class="inputs" fxfill fxlayout="collumn" style="height: 100%; min-height: 100%; min-width: 100%; width: 100%; flex-direction: column; box-sizing: border-box; display: flex; padding-bottom:20px;">
+      <div class="mat-form-field-row" fxLayout="row">
+        <mat-form-field appearance="fill">
+          <mat-label>Code</mat-label>
+          <input matInput formControlName="code" type="text" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="userName" type="text" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" required>
+        </mat-form-field>
+      </div>
+
+      <div class="mat-form-field-row" fxLayout="row">
+        <mat-form-field appearance="fill">
+          <mat-label>Site</mat-label>
+          <mat-select formControlName="siteId" (selectionChange)="onSiteSelect($event.value)" required>
+            <mat-option *ngFor="let site of sites" [value]="site.id">
+              {{site.name == site.shortname ? site.name : site.name + ':' + site.shortname}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Group</mat-label>
+          <mat-select formControlName="groupId" required>
+            <mat-option *ngFor="let group of groups" [value]="group.id">
+              {{group.name == group.shortname ? group.name : group.name + ':' + group.shortname}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="mat-form-field-row" fxLayout="row">
+        <mat-form-field appearance="fill">
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender">
+            <mat-option value="">Unknown</mat-option>
+            <mat-option value="M">Male</mat-option>
+            <mat-option value="F">Female</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Date of Birth</mat-label>
+          <input matInput [matDatepicker]="dateOfBirthPicker" formControlName="dateOfBirth" placeholder="mm/dd/yyyy">
+          <mat-datepicker-toggle matSuffix [for]="dateOfBirthPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateOfBirthPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Date of first job</mat-label>
+          <input matInput [matDatepicker]="dateOfFirstJobPicker" formControlName="dateOfFirstJob" placeholder="mm/dd/yyyy">
+          <mat-datepicker-toggle matSuffix [for]="dateOfFirstJobPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateOfFirstJobPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Therapist</mat-label>
+          <mat-select formControlName="therapistId">
+            <mat-option *ngFor="let therapist of therapists" [value]="therapist.id">
+              {{therapist.userName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <hr>
+
+      <div class="mat-form-field-row" fxLayout="row">
+        <mat-form-field appearance="fill">
+          <mat-label>Education</mat-label>
+          <mat-select formControlName="education">
+            <mat-option value="">Unknown</mat-option>
+            <mat-option value="Primary">Primary</mat-option>
+            <mat-option value="Lower secondary">Lower secondary</mat-option>
+            <mat-option value="Upper secondary">Upper secondary</mat-option>
+            <mat-option value="Post-secondary non-tertiary">Post-secondary non-tertiary</mat-option>
+            <mat-option value="Short-cycle tertiary">Short-cycle tertiary</mat-option>
+            <mat-option value="Bachelor's">Bachelor's</mat-option>
+            <mat-option value="Master's">Master's</mat-option>
+            <mat-option value="Doctoral">Doctoral</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Region</mat-label>
+          <input matInput formControlName="region" type="text">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Marital status</mat-label>
+          <mat-select formControlName="maritalStatus">
+            <mat-option value="">Unknown</mat-option>
+            <mat-option value="Single">Single</mat-option>
+            <mat-option value="Married">Married</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <div class="mat-form-field-row" fxLayout="row">
+        <mat-form-field appearance="fill">
+          <mat-label>Date of current job</mat-label>
+          <input matInput [matDatepicker]="currentJobPicker" formControlName="dateOfCurrentJob" placeholder="mm/dd/yyyy">
+          <mat-datepicker-toggle matSuffix [for]="currentJobPicker"></mat-datepicker-toggle>
+          <mat-datepicker #currentJobPicker></mat-datepicker>
+        </mat-form-field>  
+
+        <mat-form-field appearance="fill">
+          <mat-label>Job type</mat-label>
+          <input matInput formControlName="jobType" type="text">
+        </mat-form-field>
+      </div>
+
+      <div class="mat-form-field-row" fxLayout="row">
+        <mat-form-field appearance="fill">
+          <mat-label> Participation start date</mat-label>
+          <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" placeholder="mm/dd/yyyy">
+          <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Participation end date</mat-label>
+          <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" placeholder="mm/dd/yyyy">
+          <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+        </mat-form-field>  
+      </div>
+    </div>
+
+    <div dir="rtl" style="padding-bottom:20px;">
+      <button mat-raised-button color="primary" [disabled]="loading" type="submit">Create</button>
+      <a class="cancel-button" mat-raised-button routerLink="/participants">Cancel</a>
+    </div>
+    <p fxfill fxlayout="column" style="height: 100%; min-height: 100%; min-width: 100%; width: 100%; flex-direction: column; box-sizing: border-box; display: flex;" *ngIf="error" class="error">{{ error }}</p>
+  </form>
+</mat-card>

@@ -1,0 +1,60 @@
+:host {
+  .mat-icon {
+    vertical-align: middle;
+    margin-right: 20px;
+  }
+
+  .profile-card {
+    text-align: center;
+    padding: 0 20px 20px 20px;
+    img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-top: 0.5em;
+      margin-bottom: 0;
+    }
+  }
+
+  .mat-nav-list {
+    margin-bottom: 50px;
+  }
+
+  .active {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  div.header > h3 {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  div.header > h4 {
+    margin-top: 0em;
+    margin-bottom: 0em;
+  }
+
+  .sub-menu-header {
+    font-size: 16px;
+  }
+
+  .sub-menu-icon {
+    margin-right: 5px;
+  }
+
+  .sub-menu-item {
+    margin-left: 30px;
+    font-size: 14.5px;
+  }
+
+  .build-version {
+    font-size: smaller;
+    padding: 10px 0;
+  }
+
+  .build-version > a {
+    text-decoration: none;
+    color: #03a9f4;
+  }
+}

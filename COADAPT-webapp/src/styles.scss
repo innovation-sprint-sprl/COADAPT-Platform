@@ -1,0 +1,90 @@
+/* You can add global styles to this file, and also import other style files */
+// @import "../node_modules/bootstrap/scss/bootstrap";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.bg-primary-coadapt {
+  background-color: #00b0f0 !important;
+}
+
+.login-bg {
+  background-image: url(assets/login_back.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #464646;
+}
+
+.error-page-container {
+  text-align: center;
+  align-items: center;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.error {
+  padding: 16px;
+  width: 300px;
+  color: white;
+  background-color: red;
+}
+
+.material-icons.delete {
+  color: #e53935 !important;
+}
+
+.material-icons.edit {
+  color: #03a9f4 !important;
+}
+
+.w-75 {
+  max-width: 80px;
+}
+
+.w-100 {
+  max-width: 100px;
+}
+
+.th-center {
+  text-align: center;
+}
+
+.th-left {
+  text-align: left;
+}
+
+.th-right {
+  text-align: right;
+}
+
+.mat-snack-bar-container {
+  width: 800px !important;
+  color: white;
+}
+
+.mat-snack-bar-container button{
+  color: #ffeb3b;
+}
+
+a.cancel-button{
+  margin-right: 5px;
+}
+
+.mat-row:hover {
+  background-color: rgb(240, 240, 240);
+  cursor: pointer;
+}

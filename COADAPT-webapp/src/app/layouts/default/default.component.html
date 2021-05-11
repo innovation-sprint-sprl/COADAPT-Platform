@@ -1,0 +1,20 @@
+<app-header (toggleSideBarForMe)="sideBarToggler()"></app-header>
+
+<mat-drawer-container>
+  <mat-drawer mode="side" [opened]="sideBarOpen">
+    <app-sidebar></app-sidebar>
+  </mat-drawer>
+  <mat-drawer-content>
+    <!-- Page Title Heading Start -->
+    <div *ngIf="pageTitle" style="padding-bottom: 10px;">
+      <mat-toolbar style="background: #FAFAFA;">
+        <span>{{pageTitle}}</span>
+      </mat-toolbar>
+      <mat-divider></mat-divider>
+    </div>
+    <!-- Page Title Heading End -->
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+<!-- <app-footer></app-footer> -->

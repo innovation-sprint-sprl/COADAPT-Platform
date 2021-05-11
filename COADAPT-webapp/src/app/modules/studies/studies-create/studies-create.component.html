@@ -1,0 +1,39 @@
+<mat-card>
+  <form [formGroup]="createStudyForm" (ngSubmit)="onSubmit()" fxLayout="column" fxLayoutAlign="space-between stretch">
+    <div class="inputs" fxfill fxlayout="collumn" style="height: 100%; min-height: 100%; min-width: 100%; width: 100%; flex-direction: column; box-sizing: border-box; display: flex;">
+      <mat-form-field appearance="fill">
+        <mat-label>Study name</mat-label>
+        <input matInput formControlName="name" type="text" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Study short name</mat-label>
+        <input matInput formControlName="shortName" type="text" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Organization</mat-label>
+        <mat-select formControlName="organizationId" required>
+          <mat-option *ngFor="let organization of organizations" [value]="organization.id">
+            {{organization.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Supervisor</mat-label>
+        <mat-select formControlName="supervisorId" required>
+          <mat-option *ngFor="let supervisor of supervisors" [value]="supervisor.id">
+            {{supervisor.userName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div dir="rtl">
+      <button mat-raised-button color="primary" [disabled]="loading" type="submit">Create</button>
+      <a class="cancel-button" mat-raised-button routerLink="/studies">Cancel</a>
+    </div>
+    <p fxfill fxlayout="column" style="height: 100%; min-height: 100%; min-width: 100%; width: 100%; flex-direction: column; box-sizing: border-box; display: flex;" *ngIf="error" class="error">{{ error }}</p>
+  </form>
+</mat-card>

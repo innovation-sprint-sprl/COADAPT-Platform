@@ -1,0 +1,43 @@
+<div fxFlex="100">
+  <div class="mb-10" dir="rtl" fxLayoutGap="10px">
+    <a mat-raised-button color="primary" routerLink="/supervisors/create">Create</a>
+  </div>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+
+      <ng-container matColumnDef="userName">
+        <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{ user.userName }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="createdOn">
+        <mat-header-cell *matHeaderCellDef> Created on </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{ user.createdOn.replace('T',' ').substring(0,16) }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="organizations">
+        <mat-header-cell *matHeaderCellDef> Organizations </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{ user.organizations.join(', ') }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="studies">
+        <mat-header-cell *matHeaderCellDef> Studies </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{ user.studies.join(', ') }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell  *matHeaderCellDef [ngClass]="'w-75 th-center'"> Delete </mat-header-cell>
+        <mat-cell *matCellDef="let user" [ngClass]="'w-75 th-center'" (click)="$event.stopPropagation()">
+          <button mat-icon-button color="primary" (click)="deleteSupervisor(user)">
+            <mat-icon class="material-icons delete">delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editSupervisor(row.id)"></mat-row>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+  </div>
+</div>

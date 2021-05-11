@@ -1,0 +1,69 @@
+<mat-nav-list>
+  <div class="profile-card">
+    <img src="/assets/grey-avatar.jpg" alt="avatar">
+    <div class="header">
+      <h3>{{ currentUser.userName }}</h3>
+      <h4>{{ currentUserRole }}</h4>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+  <!-- divider -->
+  <h2 matSubheader>MANAGEMENT</h2>
+  <h2 matSubheader class="sub-menu-header"><mat-icon class="sub-menu-icon">group_work</mat-icon>Organizational structure</h2>
+  <!-- Organizational structure -->
+  <a mat-list-item routerLink="/organizations" routerLinkActive="active">
+    <span class="sub-menu-item">Organizations</span>
+  </a>
+  <a mat-list-item routerLink="/studies" routerLinkActive="active">
+    <span class="sub-menu-item">Studies</span>
+  </a>
+  <a mat-list-item routerLink="/sites" routerLinkActive="active">
+    <span class="sub-menu-item">Sites</span>
+  </a>
+  <a mat-list-item routerLink="/groups" routerLinkActive="active">
+    <span class="sub-menu-item">Groups</span>
+  </a>
+  <!-- Users -->
+  <h2 matSubheader class="sub-menu-header"><mat-icon class="sub-menu-icon">supervised_user_circle</mat-icon>Users</h2>
+  <a mat-list-item routerLink="/administrators" routerLinkActive="active">
+    <span class="sub-menu-item">Administrators</span>
+  </a>
+  <a mat-list-item routerLink="/sub-administrators" routerLinkActive="active">
+    <span class="sub-menu-item">Sub-administrators</span>
+  </a>
+  <a mat-list-item routerLink="/supervisors" routerLinkActive="active">
+    <span class="sub-menu-item">Supervisors</span>
+  </a>
+  <a mat-list-item routerLink="/therapists" routerLinkActive="active">
+    <span class="sub-menu-item">Therapists</span>
+  </a>
+  <a mat-list-item routerLink="/participants" routerLinkActive="active">
+    <span class="sub-menu-item">Participants</span>
+  </a>
+
+  <mat-divider></mat-divider>
+  <!-- divider -->
+  <h2 matSubheader>ANALYTICS</h2>
+  <h2 matSubheader class="sub-menu-header"><mat-icon class="sub-menu-icon">groups</mat-icon>Overall</h2>
+  <a mat-list-item routerLink="/overall/demographics" routerLinkActive="active">
+    <span class="sub-menu-item">Demographics</span>
+  </a>
+  <a mat-list-item routerLink="/overall/physiological" routerLinkActive="active">
+    <span class="sub-menu-item">Physiological</span>
+  </a>
+  <a mat-list-item routerLink="/overall/psychological" routerLinkActive="active">
+    <span class="sub-menu-item">Psychological</span>
+  </a>
+  <h2 matSubheader class="sub-menu-header"><mat-icon class="sub-menu-icon">person</mat-icon>Individual</h2>
+  <a mat-list-item routerLink="/individual/physiological" routerLinkActive="active">
+    <span class="sub-menu-item">Physiological</span>
+  </a>
+  <a mat-list-item routerLink="/individual/psychological" routerLinkActive="active">
+    <span class="sub-menu-item">Psychological</span>
+  </a>
+
+</mat-nav-list>
+<div  fxLayout="row" fxLayoutAlign="center center" class="build-version">
+    <a href="//coadapt-project.eu/our-project/mission/" target="_blank">COADAPT Project</a>&nbsp;-&nbsp;<span>Version: {{ version }}</span>
+</div>

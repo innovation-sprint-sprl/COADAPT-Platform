@@ -1,0 +1,61 @@
+import { Participant } from './participant'
+
+export interface PsychologicalReport {
+  id: number;
+  participantId: number;
+  participant?: Participant;
+  dateOfReport: Date;
+
+  intrinsicFactorsOfWork: number;
+  managerialRole: number;
+  relationshipWithOtherPeople: number;
+  careerAndSuccess: number;
+  climateAndOrganizationalStructure: number;
+  homeWorkInterface: number;
+  attitudeTowardsLife: number;
+  styleOfBehavior: number;
+  ambition: number;
+  typeASynthetic: number;
+  typeATotal: number;
+  organizationalForces: number;
+  managementProcesses: number;
+  individualInfluences: number;
+  locusOfControlSynthetic: number;
+  locusOfControlTotal: number;
+  socialSupport: number;
+  taskOrientation: number;
+  logical: number;
+  homeWorkRelationship: number;
+  time: number;
+  involvement: number;
+  careerSatisfaction: number;
+  jobSatisfaction: number;
+  settingAndOrganizationalStructureSatisfaction: number;
+  organizationalProcessesSatisfaction: number;
+  interpersonalRelationshipsSatisfaction: number;
+  syntheticJobSatisfaction: number;
+  totalJobSatisfaction: number;
+  psychologicalHealth: number;
+  physicalHealth: number;
+  globalSeverityIndex: number;
+  positiveSymptomTotal: number;
+  positiveSymptomDistressIndex: number;
+  somatization: number;
+  obsessivenessCompulsiveness: number;
+  interpersonalHypersensitivity: number;
+  depression: number;
+  anxiety: number;
+  hostility: number;
+  phobicAnxiety: number;
+  paranoidIdeation: number;
+  psychoticism: number;
+  perceivedStressScale: number;
+  sleepProblem: number;
+  trialUserComments: string;
+  therapistComments: string;
+  thoughtsOnChildren: string;
+  thoughtsOnParents: string;
+  stressfulEvents: string;
+  medicalConditionSelfAssessment: string;
+  psychologicalConditionSelfAssessment: string;
+}
