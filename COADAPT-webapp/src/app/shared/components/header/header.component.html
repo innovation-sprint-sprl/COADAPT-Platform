@@ -12,8 +12,15 @@
         <br>Support to Aging Citizens
       </span>
     </a>
+    
     <!-- User Options -->
     <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+      <div class="profile-card">
+        <div class="header">
+          <span>{{ currentUserRole }}</span><br>
+          <span>{{ currentUser.userName }}</span>
+        </div>
+      </div>
       <ul fxLayout="row" fxLayoutGap="20px">
         <li>
           <button mat-button [matMenuTriggerFor]="menu">

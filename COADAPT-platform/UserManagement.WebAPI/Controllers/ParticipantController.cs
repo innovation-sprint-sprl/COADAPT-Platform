@@ -87,6 +87,81 @@ namespace UserManagement.WebAPI.Controllers {
 		}
 
 		/// <summary>
+		/// Retrieve participants with all the information they are associated with.
+		/// </summary>
+		/// <remarks>
+		/// Remarks:
+		/// - Only administrators, sub-administrators, supervisors or therapists can retrieve all participants
+		/// -- Administrators can retrieve all participants
+		/// -- Sub-administrators only retrieve participants to sites of their organization
+		/// -- Supervisors only retrieve participants to sites of their studies
+		/// -- Therapists only retrieve participants assigned to them
+		/// </remarks>
+		[Authorize(Policy = "Therapist")]
+		[HttpGet("full", Name = "AllParticipantsFullData")]
+		[ProducesResponseType(typeof(Participant), StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		public async Task<IActionResult> GetAllParticipantsFullData() {
+			string userId = HttpContext.User.Claims.Single(x => x.Type == "id").Value;
+			string role = HttpContext.User.Claims.Single(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value;
+			_logger.LogInfo(role);
+			if (role == Role.AdministratorRole) {
+				var participants = await _coadaptService.Participant.GetAllParticipantsAsync();
+				foreach (var participant in participants) {
+					participant.User = await _userManager.FindByIdAsync(participant.UserId);
+					if (participant.TherapistId.HasValue) {
+						participant.Therapist = await _coadaptService.Therapist.GetTherapistByIdAsync(participant.TherapistId.Value);
+					}
+					participant.StudyParticipants = (ICollection<StudyParticipant>)await _coadaptService.StudyParticipant.StudyParticipantsByParticipant(participant.Id);
+				}
+				return Ok(participants);
+			}
+			if (role == Role.SubAdministratorRole || role == Role.SupervisorRole) {
+				List<Study> studies = new List<Study>();
+				if (role == Role.SubAdministratorRole) {
+					var requestingSubAdmin = await _coadaptService.SubAdministrator.GetSubAdministratorByUserIdAsync(userId);
+					var organization = await _coadaptService.Organization.GetOrganizationBySubAdministratorIdAsync(requestingSubAdmin.Id);
+					studies.AddRange(await _coadaptService.Study.GetStudiesByOrganizationIdAsync(organization.Id));
+				} else {
+					var requestingSupervisor = await _coadaptService.Supervisor.GetSupervisorByUserIdAsync(userId);
+					studies.AddRange(await _coadaptService.Study.GetStudiesBySupervisorIdAsync(requestingSupervisor.Id));
+				}
+				List<StudyParticipant> studyParticipants = new List<StudyParticipant>();
+				foreach (var study in studies) {
+					studyParticipants.AddRange(await _coadaptService.StudyParticipant.StudyParticipantsByStudy(study.Id, false));
+				}
+				IList<Participant> participantsList = new List<Participant>();
+				foreach (var studyParticipant in studyParticipants) {
+					var participant = await _coadaptService.Participant.GetParticipantByIdAsync(studyParticipant.ParticipantId);
+					if (!participantsList.Contains(participant)) {
+						participantsList.Add(participant);
+					}
+				}
+				foreach (var participant in participantsList) {
+					participant.User = await _userManager.FindByIdAsync(participant.UserId);
+					if (participant.TherapistId.HasValue) {
+						participant.Therapist = await _coadaptService.Therapist.GetTherapistByIdAsync(participant.TherapistId.Value);
+					}
+					participant.StudyParticipants = (ICollection<StudyParticipant>)await _coadaptService.StudyParticipant.StudyParticipantsByParticipant(participant.Id);
+				}
+				return Ok(participantsList);
+			}
+			// Requesting user is a therapist
+			var requestingTherapist = await _coadaptService.Therapist.GetTherapistByUserIdAsync(userId);
+			var participantsCollection = await _coadaptService.Participant.GetParticipantsByTherapistIdAsync(requestingTherapist.Id);
+			foreach (var participant in participantsCollection) {
+				participant.User = await _userManager.FindByIdAsync(participant.UserId);
+				if (participant.TherapistId.HasValue) {
+					participant.Therapist = await _coadaptService.Therapist.GetTherapistByIdAsync(participant.TherapistId.Value);
+				}
+				participant.StudyParticipants = (ICollection<StudyParticipant>)await _coadaptService.StudyParticipant.StudyParticipantsByParticipant(participant.Id);
+			}
+			return Ok(participantsCollection);
+		}
+
+		/// <summary>
 		///	Retrieve the participant with given code
 		/// </summary>
 		/// <remarks>
@@ -250,9 +325,9 @@ namespace UserManagement.WebAPI.Controllers {
 				SiteId = site.Id,
 				GroupId = group.Id,
 				ParticipantId = participant.Id,
-				StartDate = participantCreateRequest.StartDate ?? new DateTime(2000, 1, 1),
-				EndDate = participantCreateRequest.EndDate ?? new DateTime(2000, 1, 1),
-				DateOfCurrentJob = participantCreateRequest.DateOfCurrentJob ?? new DateTime(2000, 1, 1),
+				StartDate = participantCreateRequest.StartDate ?? new DateTime(1, 1, 1),
+				EndDate = participantCreateRequest.EndDate ?? new DateTime(1, 1, 1),
+				DateOfCurrentJob = participantCreateRequest.DateOfCurrentJob ?? new DateTime(1, 1, 1),
 				Education = participantCreateRequest.Education,
 				JobType = participantCreateRequest.JobType,
 				MaritalStatus = participantCreateRequest.MaritalStatus,
@@ -311,6 +386,18 @@ namespace UserManagement.WebAPI.Controllers {
 			}
 			foreach (PsychologicalReport psychologicalReport in await _coadaptService.PsychologicalReport.GetPsychologicalReportsByParticipantIdAsync(participant.Id)) {
 				_coadaptService.PsychologicalReport.DeletePsychologicalReport(psychologicalReport);
+			}
+			foreach (PhysiologicalSignal physiologicalSignal in await _coadaptService.PhysiologicalSignal.GetPhysiologicalSignalsByParticipantIdAsync(participant.Id)) {
+				_coadaptService.PhysiologicalSignal.DeletePhysiologicalSignal(physiologicalSignal);
+			}
+			foreach (OuraActivity ouraActivity in await _coadaptService.OuraActivity.GetOuraActivitiesByParticipantIdAsync(participant.Id)) {
+				_coadaptService.OuraActivity.DeleteOuraActivity(ouraActivity);
+			}
+			foreach (OuraReadiness ouraReadiness in await _coadaptService.OuraReadiness.GetOuraReadinessesByParticipantIdAsync(participant.Id)) {
+				_coadaptService.OuraReadiness.DeleteOuraReadiness(ouraReadiness);
+			}
+			foreach (OuraSleep ouraSleep in await _coadaptService.OuraSleep.GetOuraSleepsByParticipantIdAsync(participant.Id)) {
+				_coadaptService.OuraSleep.DeleteOuraSleep(ouraSleep);
 			}
 			_coadaptService.Participant.DeleteParticipant(participant);
 			result = await _userManager.DeleteAsync(user);
@@ -600,9 +687,9 @@ namespace UserManagement.WebAPI.Controllers {
 				UserId = participant.UserId, 
 				Code = code, 
 				TherapistId = therapistId,
-				Gender = participantUpdateRequest.Gender ?? participant.Gender,
-				DateOfBirth = participantUpdateRequest.DateOfBirth ?? participant.DateOfBirth,
-				DateOfFirstJob = participantUpdateRequest.DateOfFirstJob ?? participant.DateOfFirstJob
+				Gender = participantUpdateRequest.Gender,
+				DateOfBirth = participantUpdateRequest.DateOfBirth,
+				DateOfFirstJob = participantUpdateRequest.DateOfFirstJob
 			});
 			#endregion
 
@@ -613,13 +700,13 @@ namespace UserManagement.WebAPI.Controllers {
 					SiteId = site.Id,
 					GroupId = group.Id,
 					ParticipantId = participant.Id,
-					StartDate = participantUpdateRequest.StartDate ?? studyParticipant.StartDate,
-					EndDate = participantUpdateRequest.EndDate ?? studyParticipant.EndDate,
-					DateOfCurrentJob = participantUpdateRequest.DateOfCurrentJob ?? studyParticipant.DateOfCurrentJob,
-					Education = !string.IsNullOrWhiteSpace(participantUpdateRequest.Education) ? participantUpdateRequest.Education : studyParticipant.Education,
-					JobType = !string.IsNullOrWhiteSpace(participantUpdateRequest.JobType) ? participantUpdateRequest.JobType : studyParticipant.JobType,
-					MaritalStatus = !string.IsNullOrWhiteSpace(participantUpdateRequest.MaritalStatus) ? participantUpdateRequest.MaritalStatus : studyParticipant.MaritalStatus,
-					RegionOfResidence = !string.IsNullOrWhiteSpace(participantUpdateRequest.Region) ? participantUpdateRequest.Region : studyParticipant.RegionOfResidence,
+					StartDate = participantUpdateRequest.StartDate,
+					EndDate = participantUpdateRequest.EndDate,
+					DateOfCurrentJob = participantUpdateRequest.DateOfCurrentJob,
+					Education = participantUpdateRequest.Education,
+					JobType = participantUpdateRequest.JobType,
+					MaritalStatus = participantUpdateRequest.MaritalStatus,
+					RegionOfResidence = participantUpdateRequest.Region,
 					Abandoned = studyParticipant.Abandoned
 				});
 			} else {
@@ -628,9 +715,9 @@ namespace UserManagement.WebAPI.Controllers {
 					SiteId = site.Id,
 					GroupId = group.Id,
 					ParticipantId = participant.Id,
-					StartDate = participantUpdateRequest.StartDate ?? new DateTime(2000, 1, 1),
+					StartDate = participantUpdateRequest.StartDate,
 					EndDate = participantUpdateRequest.EndDate,
-					DateOfCurrentJob = participantUpdateRequest.DateOfCurrentJob ?? new DateTime(2000, 1, 1),
+					DateOfCurrentJob = participantUpdateRequest.DateOfCurrentJob,
 					Education = participantUpdateRequest.Education,
 					JobType = participantUpdateRequest.JobType,
 					MaritalStatus = participantUpdateRequest.MaritalStatus,

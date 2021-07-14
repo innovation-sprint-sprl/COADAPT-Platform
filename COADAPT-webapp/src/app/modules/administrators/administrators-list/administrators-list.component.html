@@ -3,15 +3,15 @@
     <a mat-raised-button color="primary" routerLink="/administrators/create">Create</a>
   </div>
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table matSort matSortActive="userName" matSortDirection="asc" [dataSource]="dataSource">
 
       <ng-container matColumnDef="userName">
-        <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Username </mat-header-cell>
         <mat-cell *matCellDef="let user"> {{ user.userName }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="createdOn">
-        <mat-header-cell *matHeaderCellDef> Created on </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Created on </mat-header-cell>
         <mat-cell *matCellDef="let user"> {{ user.createdOn.replace('T',' ').substring(0,16) }} </mat-cell>
       </ng-container>
 

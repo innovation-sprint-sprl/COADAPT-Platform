@@ -20,26 +20,6 @@
 
       <div class="mat-form-field-row" fxLayout="row">
         <mat-form-field appearance="fill">
-          <mat-label>Site</mat-label>
-          <mat-select formControlName="siteId" (selectionChange)="onSiteSelect($event.value)" required>
-            <mat-option *ngFor="let site of sites" [value]="site.id">
-              {{site.name == site.shortname ? site.name : site.name + ':' + site.shortname}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
-          <mat-label>Group</mat-label>
-          <mat-select formControlName="groupId" required>
-            <mat-option *ngFor="let group of groups" [value]="group.id">
-              {{group.name == group.shortname ? group.name : group.name + ':' + group.shortname}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="mat-form-field-row" fxLayout="row">
-        <mat-form-field appearance="fill">
           <mat-label>Gender</mat-label>
           <mat-select formControlName="gender">
             <mat-option value="">Unknown</mat-option>
@@ -65,6 +45,7 @@
         <mat-form-field appearance="fill">
           <mat-label>Therapist</mat-label>
           <mat-select formControlName="therapistId">
+            <mat-option value="">Unknown</mat-option>
             <mat-option *ngFor="let therapist of therapists" [value]="therapist.id">
               {{therapist.userName}}
             </mat-option>
@@ -73,6 +54,26 @@
       </div>
 
       <hr>
+
+      <div class="mat-form-field-row" fxLayout="row">
+        <mat-form-field appearance="fill">
+          <mat-label>Site</mat-label>
+          <mat-select formControlName="siteId" (selectionChange)="onSiteSelect($event.value)" required>
+            <mat-option *ngFor="let site of sites" [value]="site.id">
+              {{site.name == site.shortname ? site.name : site.name + ':' + site.shortname}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Group</mat-label>
+          <mat-select formControlName="groupId" required>
+            <mat-option *ngFor="let group of groups" [value]="group.id">
+              {{group.name == group.shortname ? group.name : group.name + ':' + group.shortname}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
       <div class="mat-form-field-row" fxLayout="row">
         <mat-form-field appearance="fill">

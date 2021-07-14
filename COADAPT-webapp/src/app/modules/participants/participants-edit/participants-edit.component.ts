@@ -7,7 +7,7 @@ import { first } from 'rxjs/operators';
 
 import { RepositoryService, PasswordValidator } from '../../../services'
 import { APIv1 } from '../../../constants';
-import { COADAPTUser, Site, Group, ParticipantEdit } from './../../../models';
+import { COADAPTUser, Site, Group, ParticipantEdit, Study } from './../../../models';
 
 @Component({
   selector: 'app-participants-edit',
@@ -22,6 +22,7 @@ export class ParticipantsEditComponent implements OnInit {
   public therapists: COADAPTUser[];
   public sites: Site[];
   public newGroups: Group[] = [];
+  public studies: Study[] = [];
   public groupsByParticipation: Group[][] = [];
   public selectedSites : number[] = [];
   public selectedGroups : number[] = [];
@@ -126,7 +127,7 @@ export class ParticipantsEditComponent implements OnInit {
         therapistId: new FormControl(`${participant.therapistId}`, Validators.required)
       });
       this.updateParticipantForm.get('code').disable();
-
+      this.updateParticipantForm.get('therapistId').setValue((participant.therapistId === null) ? '' : participant.therapistId);  
       for (var i = 0; i < this.participations; i++) {
         this.getAllForms().push(new FormGroup({
           siteId: new FormControl(`${participant.studyParticipants[i]?.siteId}`, Validators.required),
@@ -152,10 +153,34 @@ export class ParticipantsEditComponent implements OnInit {
         this.getAllForms().controls[i].get('groupId').disable();
       }
 
+      this.convertNullToEmptyValues();
+      this.convertDefaultToEmptyDates();
       setTimeout(() => {
         this.checkAbandonedParticipations();
       });
     });
+  }
+
+  //this function converts all dates that are retrieved from the backend with a default value and converts them to empty dates for proper display in the UI
+  public convertDefaultToEmptyDates(): void {
+    this.updateParticipantForm.get('dateOfBirth').setValue((this.updateParticipantForm.value['dateOfBirth'] === '0001-01-01T00:00:00') ? '' : this.updateParticipantForm.value['dateOfBirth']);  
+    this.updateParticipantForm.get('dateOfFirstJob').setValue((this.updateParticipantForm.value['dateOfFirstJob'] === '0001-01-01T00:00:00') ? '' : this.updateParticipantForm.value['dateOfFirstJob']);  
+    for (var i = 0; i < this.participations; i++) {
+      this.getAllForms().controls[i].get('dateOfCurrentJob').setValue((this.getAllForms().controls[i].get('dateOfCurrentJob').value === '0001-01-01T00:00:00') ? '' : this.getAllForms().controls[i].get('dateOfCurrentJob').value);  
+      this.getAllForms().controls[i].get('startDate').setValue((this.getAllForms().controls[i].get('startDate').value === '0001-01-01T00:00:00') ? '' : this.getAllForms().controls[i].get('startDate').value);  
+      this.getAllForms().controls[i].get('endDate').setValue((this.getAllForms().controls[i].get('endDate').value === '0001-01-01T00:00:00') ? '' : this.getAllForms().controls[i].get('endDate').value);  
+    }
+  }
+
+  //this function converts all null or 'null' values that are retrieved from the backend and converts them to empty strings for proper display in the UI
+  public convertNullToEmptyValues(): void {
+    this.updateParticipantForm.get('gender').setValue((this.updateParticipantForm.value['gender'] === 'null' || this.updateParticipantForm.value['gender'] === null) ? '' : this.updateParticipantForm.value['gender']);  
+    for (var i = 0; i < this.participations; i++) {
+      this.getAllForms().controls[i].get('education').setValue((this.getAllForms().controls[i].get('education').value === 'null' || this.getAllForms().controls[i].get('education').value === null) ? '' : this.getAllForms().controls[i].get('education').value);  
+      this.getAllForms().controls[i].get('region').setValue((this.getAllForms().controls[i].get('region').value === 'null' || this.getAllForms().controls[i].get('region').value === null) ? '' : this.getAllForms().controls[i].get('region').value);  
+      this.getAllForms().controls[i].get('maritalStatus').setValue((this.getAllForms().controls[i].get('maritalStatus').value === 'null' || this.getAllForms().controls[i].get('maritalStatus').value === null) ? '' : this.getAllForms().controls[i].get('maritalStatus').value);  
+      this.getAllForms().controls[i].get('jobType').setValue((this.getAllForms().controls[i].get('jobType').value === 'null' || this.getAllForms().controls[i].get('jobType').value === null) ? '' : this.getAllForms().controls[i].get('jobType').value);  
+    }
   }
 
   public checkAbandonedParticipations(): void {
@@ -266,6 +291,7 @@ export class ParticipantsEditComponent implements OnInit {
     this.sites.forEach(site => {
       if (site.id === selectedSiteId) {
         studyId = site.studyId;
+        this.studies.push(site.study);
       }
     });
     this.getGroupsOfSameStudy(studyId);
@@ -289,27 +315,47 @@ export class ParticipantsEditComponent implements OnInit {
     this.isFormDisplayed = !this.isFormDisplayed;
   }
   /*
-    buildCreateObject and buildUpdateObject check for values equal to the string 'null', 
-    because some participants and studyparticipants will return 'null' for a few of their fields from the backend.
-    If they are equal, these functions convert them to null values(not 'null').
-    This overcomes the issue of the update request failing for such participants/studyparticipants
+    buildCreateObject and buildUpdateObject make the necessary conversions to the object values before placing the request.
   */
   public buildCreateObject(): void{
     this.finalUpdateForm.value['userName'] = this.updateParticipantForm.value['userName'];
     this.finalUpdateForm.value['password'] = this.updateParticipantForm.value['password'];
     this.finalUpdateForm.value['gender'] = this.updateParticipantForm.value['gender'];
-    this.finalUpdateForm.value['dateOfBirth'] = (this.updateParticipantForm.value['dateOfBirth'] === 'null') ? null : this.updateParticipantForm.value['dateOfBirth'];
-    this.finalUpdateForm.value['dateOfFirstJob'] = (this.updateParticipantForm.value['dateOfFirstJob'] === 'null') ? null : this.updateParticipantForm.value['dateOfFirstJob'];
-    this.finalUpdateForm.value['therapistId'] = (this.updateParticipantForm.value['therapistId'] === 'null') ? null : this.updateParticipantForm.value['therapistId'];
+
+    if (this.updateParticipantForm.value['dateOfBirth'] === 'null' || this.updateParticipantForm.value['dateOfBirth'] === '' || this.updateParticipantForm.value['dateOfBirth'] === null) {
+      this.updateParticipantForm.value['dateOfBirth'] = new Date("0001-01-01T00:00:00.000+00:00");
+      this.formatParticipantFormDate('dateOfBirth');
+    }
+    this.finalUpdateForm.value['dateOfBirth'] = this.updateParticipantForm.value['dateOfBirth']
+
+    if (this.updateParticipantForm.value['dateOfFirstJob'] === 'null' || this.updateParticipantForm.value['dateOfFirstJob'] === '' || this.updateParticipantForm.value['dateOfFirstJob'] === null) {
+      this.updateParticipantForm.value['dateOfFirstJob'] = new Date("0001-01-01T00:00:00.000+00:00");
+      this.formatParticipantFormDate('dateOfFirstJob');
+    }
+    this.finalUpdateForm.value['dateOfFirstJob'] = this.updateParticipantForm.value['dateOfFirstJob'];
+
+    this.finalUpdateForm.value['therapistId'] = (this.updateParticipantForm.value['therapistId'] === '') ? null : this.updateParticipantForm.value['therapistId'];
     this.finalUpdateForm.value['siteId'] = this.addStudyParticipantForm.value['siteId'];
     this.finalUpdateForm.value['groupId'] = this.addStudyParticipantForm.value['groupId'];
     this.finalUpdateForm.value['education'] = this.addStudyParticipantForm.value['education'];
     this.finalUpdateForm.value['region'] = this.addStudyParticipantForm.value['region'];
     this.finalUpdateForm.value['maritalStatus'] = this.addStudyParticipantForm.value['maritalStatus'];
+
+    if (this.addStudyParticipantForm.value['dateOfCurrentJob'] === 'null' || this.addStudyParticipantForm.value['dateOfCurrentJob'] === '' || this.addStudyParticipantForm.value['dateOfCurrentJob'] === null) {
+      this.addStudyParticipantForm.value['dateOfCurrentJob'] = new Date("0001-01-01T00:00:00.000+00:00");
+      this.formatCreationFormDate('dateOfCurrentJob');
+    }
     this.finalUpdateForm.value['dateOfCurrentJob'] = this.addStudyParticipantForm.value['dateOfCurrentJob'];
+
     this.finalUpdateForm.value['jobType'] = this.addStudyParticipantForm.value['jobType'];
+
+    if (this.addStudyParticipantForm.value['startDate'] === 'null' || this.addStudyParticipantForm.value['startDate'] === '' || this.addStudyParticipantForm.value['startDate'] === null) {
+      this.addStudyParticipantForm.value['startDate'] = new Date("0001-01-01T00:00:00.000+00:00");
+      this.formatCreationFormDate('startDate');
+    }
     this.finalUpdateForm.value['startDate'] = this.addStudyParticipantForm.value['startDate'];
-    this.finalUpdateForm.value['endDate'] = this.addStudyParticipantForm.value['endDate'];
+
+    this.finalUpdateForm.value['endDate'] = (this.addStudyParticipantForm.value['endDate'] === 'null') ? null : this.addStudyParticipantForm.value['endDate'];
   }
 
   onJoinStudy(): void {
@@ -332,17 +378,40 @@ export class ParticipantsEditComponent implements OnInit {
     this.finalUpdateForm.value['userName'] = this.updateParticipantForm.value['userName'];
     this.finalUpdateForm.value['password'] = this.updateParticipantForm.value['password'];
     this.finalUpdateForm.value['gender'] = this.updateParticipantForm.value['gender'];
-    this.finalUpdateForm.value['dateOfBirth'] = (this.updateParticipantForm.value['dateOfBirth'] === 'null') ? null : this.updateParticipantForm.value['dateOfBirth'];
-    this.finalUpdateForm.value['dateOfFirstJob'] = (this.updateParticipantForm.value['dateOfFirstJob'] === 'null') ? null : this.updateParticipantForm.value['dateOfFirstJob'];
-    this.finalUpdateForm.value['therapistId'] = (this.updateParticipantForm.value['therapistId'] === 'null') ? null : this.updateParticipantForm.value['therapistId'];
+
+    if (this.updateParticipantForm.value['dateOfBirth'] === 'null' || this.updateParticipantForm.value['dateOfBirth'] === '' || this.updateParticipantForm.value['dateOfBirth'] === null) {
+      this.updateParticipantForm.value['dateOfBirth'] = new Date("0001-01-01T00:00:00.000+00:00");
+      this.formatParticipantFormDate('dateOfBirth');
+    } 
+    this.finalUpdateForm.value['dateOfBirth'] = this.updateParticipantForm.value['dateOfBirth'];
+
+    if (this.updateParticipantForm.value['dateOfFirstJob'] === 'null' || this.updateParticipantForm.value['dateOfFirstJob'] === '' || this.updateParticipantForm.value['dateOfFirstJob'] === null) {
+      this.updateParticipantForm.value['dateOfFirstJob'] = new Date("0001-01-01T00:00:00.000+00:00");
+      this.formatParticipantFormDate('dateOfFirstJob');
+    }
+    this.finalUpdateForm.value['dateOfFirstJob'] = this.updateParticipantForm.value['dateOfFirstJob'];
+
+    this.finalUpdateForm.value['therapistId'] = (this.updateParticipantForm.value['therapistId'] === '') ? null : this.updateParticipantForm.value['therapistId'];
     this.finalUpdateForm.value['siteId'] = this.getAllForms().controls[activeForm].get('siteId').value;
     this.finalUpdateForm.value['groupId'] = this.getAllForms().controls[activeForm].get('groupId').value;
     this.finalUpdateForm.value['education'] = this.getAllForms().controls[activeForm].get('education').value;
     this.finalUpdateForm.value['region'] = this.getAllForms().controls[activeForm].get('region').value;
     this.finalUpdateForm.value['maritalStatus'] = this.getAllForms().controls[activeForm].get('maritalStatus').value;
-    this.finalUpdateForm.value['dateOfCurrentJob'] = (this.getAllForms().controls[activeForm].get('dateOfCurrentJob').value === 'null') ? null : this.getAllForms().controls[activeForm].get('dateOfCurrentJob').value;
+
+    if (this.getAllForms().controls[activeForm].get('dateOfCurrentJob').value === 'null' || this.getAllForms().controls[activeForm].get('dateOfCurrentJob').value === ''|| this.getAllForms().controls[activeForm].get('dateOfCurrentJob').value === null) {
+      this.getAllForms().controls[activeForm].get('dateOfCurrentJob').setValue(new Date("0001-01-01T00:00:00.000+00:00"));
+      this.formatStudyParticipantFormDate('dateOfCurrentJob', activeForm);
+    }
+    this.finalUpdateForm.value['dateOfCurrentJob'] = this.getAllForms().controls[activeForm].get('dateOfCurrentJob').value;
+
     this.finalUpdateForm.value['jobType'] = this.getAllForms().controls[activeForm].get('jobType').value;
-    this.finalUpdateForm.value['startDate'] = (this.getAllForms().controls[activeForm].get('startDate').value === 'null') ? null : this.getAllForms().controls[activeForm].get('startDate').value;
+
+    if (this.getAllForms().controls[activeForm].get('startDate').value === 'null' || this.getAllForms().controls[activeForm].get('startDate').value === '' || this.getAllForms().controls[activeForm].get('startDate').value === null) {
+      this.getAllForms().controls[activeForm].get('startDate').setValue(new Date("0001-01-01T00:00:00.000+00:00"));
+      this.formatStudyParticipantFormDate('startDate',activeForm);
+    }
+    this.finalUpdateForm.value['startDate'] = this.getAllForms().controls[activeForm].get('startDate').value;
+
     this.finalUpdateForm.value['endDate'] = (this.getAllForms().controls[activeForm].get('endDate').value === 'null') ? null : this.getAllForms().controls[activeForm].get('endDate').value;
   }
 

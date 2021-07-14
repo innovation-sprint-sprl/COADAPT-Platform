@@ -17,7 +17,7 @@ namespace Entities.Models
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(TypeName = "DATETIME")]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
         [Column(TypeName = "DATETIME")]
         public DateTime? EndDate { get; set; }
 
@@ -26,7 +26,7 @@ namespace Entities.Models
         public string PlaceOfConsent { get; set; }
 
         [Column(TypeName = "DATETIME")]
-        public DateTime DateOfCurrentJob { get; set; }
+        public DateTime? DateOfCurrentJob { get; set; }
         public string JobType { get; set; }
         public string RegionOfResidence { get; set; }
         public string PlaceOfResidence { get; set; }

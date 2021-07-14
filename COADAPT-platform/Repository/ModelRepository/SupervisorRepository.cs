@@ -34,7 +34,8 @@ namespace Repository.ModelRepository {
 					UserName = x.User.UserName,
 					CreatedOn = x.CreatedOn,
 					Organizations = _coadaptContext.Organizations.Where(o => o.Studies.Any(s => s.OrganizationId == o.Id && s.SupervisorId == x.Id)).Select(y => y.Name).ToList(),
-					Studies = _coadaptContext.Studies.Where(s => s.SupervisorId == x.Id).Select(y => y.Name).ToList()
+					Studies = _coadaptContext.Studies.Where(s => s.SupervisorId == x.Id).Select(y => y.Name).ToList(),
+					Participants = _coadaptContext.StudyParticipants.Where(sp => sp.Study.SupervisorId == x.Id && sp.Abandoned == false).Count()
 				})
 				.ToListAsync();
 		}

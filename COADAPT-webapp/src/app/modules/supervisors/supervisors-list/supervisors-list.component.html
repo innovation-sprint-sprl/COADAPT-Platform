@@ -3,26 +3,31 @@
     <a mat-raised-button color="primary" routerLink="/supervisors/create">Create</a>
   </div>
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table matSort matSortActive="userName" matSortDirection="asc" [dataSource]="dataSource">
 
       <ng-container matColumnDef="userName">
-        <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Username </mat-header-cell>
         <mat-cell *matCellDef="let user"> {{ user.userName }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="createdOn">
-        <mat-header-cell *matHeaderCellDef> Created on </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Created on </mat-header-cell>
         <mat-cell *matCellDef="let user"> {{ user.createdOn.replace('T',' ').substring(0,16) }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="organizations">
-        <mat-header-cell *matHeaderCellDef> Organizations </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Organizations </mat-header-cell>
         <mat-cell *matCellDef="let user"> {{ user.organizations.join(', ') }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="studies">
-        <mat-header-cell *matHeaderCellDef> Studies </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Studies </mat-header-cell>
         <mat-cell *matCellDef="let user"> {{ user.studies.join(', ') }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="participants">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Participants </mat-header-cell>
+        <mat-cell *matCellDef="let user"> {{ user.participants }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="actions">

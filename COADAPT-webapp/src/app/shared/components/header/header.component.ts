@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { LoginUser } from '../../../models';
 import { AuthenticationService } from '../../../services';
 
 @Component({
@@ -11,10 +12,13 @@ import { AuthenticationService } from '../../../services';
 export class HeaderComponent implements OnInit {
   @Output() toggleSideBarForMe: EventEmitter<any> = new EventEmitter();
 
-  constructor(
-    private router: Router,
-    private authenticationService: AuthenticationService
-  ) {}
+  currentUser: LoginUser;
+  currentUserRole: string;
+
+  constructor(private router: Router, private authenticationService: AuthenticationService) {
+    this.authenticationService.currentUser.subscribe((x) => (this.currentUser = x));
+    this.currentUserRole = (this.currentUser && this.currentUser.roles) ? this.currentUser.roles[0].replace('COADAPT.', '') : '';
+  }
 
   ngOnInit(): void { }
 

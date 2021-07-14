@@ -15,5 +15,7 @@ namespace ApiModels
 
         public List<string> Studies { get; set; }
 
+        public int Participants { get; set; }
+
 	}
 }

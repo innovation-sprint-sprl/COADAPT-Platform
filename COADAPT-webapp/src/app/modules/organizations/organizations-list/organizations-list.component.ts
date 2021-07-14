@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -17,8 +18,9 @@ import { APIv1 } from '../../../constants';
   styleUrls: ['./organizations-list.component.scss'],
 })
 export class OrganizationsListComponent implements OnInit {
-  // MatTable
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
   public displayedColumns: string[] = [
     'name',
     'shortname',
@@ -36,6 +38,7 @@ export class OrganizationsListComponent implements OnInit {
       this.dataSource = new MatTableDataSource(res as OrganizationList[]);
       this.paginator.pageSize = 10;
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 

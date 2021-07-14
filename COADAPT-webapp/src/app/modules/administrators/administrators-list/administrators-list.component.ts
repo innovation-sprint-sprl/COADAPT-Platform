@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -17,8 +18,8 @@ import { APIv1 } from './../../../constants';
   styleUrls: ['./administrators-list.component.scss']
 })
 export class AdministratorsListComponent implements OnInit {
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   public displayedColumns: string[] = ['userName', 'createdOn', 'actions'];
   public dataSource: MatTableDataSource<COADAPTUser>;
@@ -30,6 +31,7 @@ export class AdministratorsListComponent implements OnInit {
       this.dataSource = new MatTableDataSource(res as COADAPTUser[]);
       this.paginator.pageSize = 10;
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 

@@ -6,30 +6,30 @@
       <a mat-raised-button color="primary" routerLink="/organizations/create">Create</a>
     </div>
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
+      <table mat-table matSort matSortActive="name" matSortDirection="asc" [dataSource]="dataSource">
 
         <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
           <mat-cell *matCellDef="let organization"> {{ organization.name }} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="shortname">
-          <mat-header-cell *matHeaderCellDef> Shortname </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Shortname </mat-header-cell>
           <mat-cell *matCellDef="let organization"> {{ organization.shortname }} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="subAdministrator">
-          <mat-header-cell *matHeaderCellDef> SubAdministrator </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> SubAdministrator </mat-header-cell>
           <mat-cell *matCellDef="let organization"> {{ organization.subAdministrator }} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="studies">
-          <mat-header-cell *matHeaderCellDef> Studies </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Studies </mat-header-cell>
           <mat-cell *matCellDef="let organization"> {{ organization.studies }} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="participants">
-          <mat-header-cell *matHeaderCellDef> Participants </mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Participants </mat-header-cell>
           <mat-cell *matCellDef="let organization"> {{ organization.participants }} </mat-cell>
         </ng-container>
 

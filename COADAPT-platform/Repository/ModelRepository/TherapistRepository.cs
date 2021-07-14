@@ -32,7 +32,7 @@ namespace Repository.ModelRepository {
 					Id = x.Id,
 					CreatedOn = x.CreatedOn,
 					UserName = x.User.UserName,
-					Participants = _coadaptContext.Participants.Where(p => p.TherapistId == x.Id).Count()
+					Participants = _coadaptContext.StudyParticipants.Where(sp => sp.Participant.TherapistId == x.Id && sp.Abandoned == false).Count()
 				})
 				.ToListAsync();
 		}

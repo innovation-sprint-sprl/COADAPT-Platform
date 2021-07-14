@@ -27,11 +27,13 @@ namespace Repository.ModelRepository {
 
         public async Task<IEnumerable<PsychologicalReport>> GetPsychologicalReportsAfterDateAsync(DateTime date) {
             return await FindByCondition(p => p.DateOfReport.CompareTo(date) >= 0)
+                .Include(p => p.Participant)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<PsychologicalReport>> GetPsychologicalReportsAfterDateByParticipantIdAsync(DateTime date, int participantId) {
             return await FindByCondition(p => p.DateOfReport.CompareTo(date) >= 0 && p.ParticipantId.Equals(participantId))
+                .Include(p => p.Participant)
                 .ToListAsync();
         }
 
@@ -51,11 +53,12 @@ namespace Repository.ModelRepository {
         }
 
         public async Task<IEnumerable<PsychologicalReport>> GetPsychologicalReportsAsync() {
-            return await FindAll().ToListAsync();
+            return await FindAll().Include(p => p.Participant).ToListAsync();
         }
 
         public async Task<IEnumerable<PsychologicalReport>> GetPsychologicalReportsByParticipantIdAsync(int participantId) {
             return await FindByCondition(p => p.ParticipantId.Equals(participantId))
+                .Include(p => p.Participant)
                 .ToListAsync();
         }
 

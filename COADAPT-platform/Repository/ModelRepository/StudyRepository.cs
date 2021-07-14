@@ -32,7 +32,7 @@ namespace Repository.ModelRepository {
 					Supervisor = s.Supervisor.User.UserName,
 					Sites = _coadaptContext.Sites.Where(st => st.StudyId == s.Id).Count(),
 					Groups = _coadaptContext.Groups.Where(g => g.StudyId == s.Id).Count(),
-					Participants = _coadaptContext.StudyParticipants.Where(sp => sp.StudyId == s.Id).Count()
+					Participants = _coadaptContext.StudyParticipants.Where(sp => sp.StudyId == s.Id && sp.Abandoned == false).Count()
 				})
 				.ToListAsync();
 		}

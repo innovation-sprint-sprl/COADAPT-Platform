@@ -312,10 +312,10 @@ namespace Entities.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("DATETIME");
 
-                    b.Property<DateTime>("DateOfFirstJob")
+                    b.Property<DateTime?>("DateOfFirstJob")
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("Files");
@@ -535,7 +535,7 @@ namespace Entities.Migrations
 
                     b.Property<int>("DataCollectionTurn");
 
-                    b.Property<DateTime>("DateOfCurrentJob")
+                    b.Property<DateTime?>("DateOfCurrentJob")
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("Education");
@@ -559,7 +559,7 @@ namespace Entities.Migrations
 
                     b.Property<int>("SiteId");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("DATETIME");
 

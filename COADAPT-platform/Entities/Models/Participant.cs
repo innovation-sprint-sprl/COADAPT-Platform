@@ -16,14 +16,14 @@ namespace Entities.Models {
 		public DateTime CreatedOn { get; set; }
 
         [Column(TypeName = "DATETIME")]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public string BirthPlace { get; set; }
         public string Language { get; set; }
         public string Gender { get; set; }
         public string Files { get; set; }
 
         [Column(TypeName = "DATETIME")]
-        public DateTime DateOfFirstJob { get; set; }
+        public DateTime? DateOfFirstJob { get; set; }
 
         [Required]
 		public string Code { get; set; }

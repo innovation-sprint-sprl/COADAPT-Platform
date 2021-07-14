@@ -39,7 +39,7 @@ namespace Repository.ModelRepository {
         }
 
 		public async Task<IEnumerable<StudyParticipant>> StudyParticipantsByParticipant(int participantId) {
-			return await FindByCondition(sp => sp.ParticipantId.Equals(participantId))
+			return await FindByCondition(sp => sp.ParticipantId.Equals(participantId)).OrderByDescending(sp => sp.StartDate)
 				.ToListAsync();
 		}
 

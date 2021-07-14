@@ -3,30 +3,30 @@
     <a mat-raised-button color="primary" routerLink="/groups/create">Create</a>
   </div>
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table matSort matSortActive="name" matSortDirection="asc" [dataSource]="dataSource">
 
       <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
         <mat-cell *matCellDef="let group"> {{ group.name }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="shortname">
-        <mat-header-cell *matHeaderCellDef> Shortname </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Shortname </mat-header-cell>
         <mat-cell *matCellDef="let group"> {{ group.shortname }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="organization">
-        <mat-header-cell *matHeaderCellDef> Organization </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Organization </mat-header-cell>
         <mat-cell *matCellDef="let group"> {{ group.organization }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="study">
-        <mat-header-cell *matHeaderCellDef> Study </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Study </mat-header-cell>
         <mat-cell *matCellDef="let group"> {{ group.study + " (" + group.studyShortname + ")" }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="participants">
-        <mat-header-cell *matHeaderCellDef> Participants </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Participants </mat-header-cell>
         <mat-cell *matCellDef="let group"> {{ group.participants }} </mat-cell>
       </ng-container>
 

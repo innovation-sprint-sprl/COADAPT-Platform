@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -18,6 +19,7 @@ import { APIv1 } from './../../../constants';
 })
 export class SitesListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   public displayedColumns: string[] = ['name', 'shortname', 'organization', 'study', 'participants', 'actions'];
   public dataSource: MatTableDataSource<SiteList>;
@@ -29,6 +31,7 @@ export class SitesListComponent implements OnInit {
       this.dataSource = new MatTableDataSource(res as SiteList[]);
       this.paginator.pageSize = 10;
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 

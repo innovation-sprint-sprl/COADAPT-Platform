@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -19,6 +20,7 @@ import { APIv1 } from './../../../constants';
 })
 export class TherapistsListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   public displayedColumns: string[] = ['userName', 'createdOn', 'participants', 'actions'];
   public dataSource: MatTableDataSource<COADAPTUser>;
@@ -30,6 +32,7 @@ export class TherapistsListComponent implements OnInit {
       this.dataSource = new MatTableDataSource(res as COADAPTUser[]);
       this.paginator.pageSize = 10;
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 

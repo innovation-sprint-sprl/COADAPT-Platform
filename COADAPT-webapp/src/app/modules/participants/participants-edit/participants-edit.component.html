@@ -44,7 +44,8 @@
 
         <mat-form-field appearance="fill">
           <mat-label>Therapist</mat-label>
-          <mat-select formControlName="therapistId" [value]="selectedTherapist">
+          <mat-select formControlName="therapistId">
+            <mat-option value="">Unknown</mat-option>
             <mat-option *ngFor="let therapist of therapists" [value]="therapist.id">
               {{therapist.userName}}
             </mat-option>
@@ -161,7 +162,7 @@
 
             <hr>
           
-            <h2>Participation {{i + 1}}</h2>
+            <h2>Participation {{studies[i]}}</h2>
           
             <div dir="rtl" style="padding-bottom:20px;">
               <a class="abandon-button" style="float:right" mat-raised-button color="warn" [disabled]="participationStatuses[i]"  (click)="onAbandon(i)">Abandon</a>
