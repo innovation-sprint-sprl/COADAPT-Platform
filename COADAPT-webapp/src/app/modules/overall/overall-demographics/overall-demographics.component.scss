@@ -1,9 +1,14 @@
+/* Style for charts */
 .stats-cards {
   .mat-card {
     overflow: hidden;
   }
 }
 
-table {
-  width: 100%;
+.chart-wrapper {
+  width: 45%;
+  float: left;
+  padding: 25px;
+  max-height: 50%;
+  padding-bottom: 4em;
 }

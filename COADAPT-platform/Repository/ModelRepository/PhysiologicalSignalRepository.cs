@@ -22,13 +22,22 @@ namespace Repository.ModelRepository {
                 .SingleAsync();
         }
 
+        public bool Exists(int participantId, DateTime timestamp) {
+            return FindByCondition(x => x.ParticipantId == participantId && x.Timestamp == timestamp).Any();
+        }
+
         public async Task<IEnumerable<PhysiologicalSignal>> GetPhysiologicalSignalsByParticipantIdAsync(int participantId) {
             return await FindByCondition(p => p.ParticipantId.Equals(participantId))
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<PhysiologicalSignal>> GetPhysiologicalSignalsAfterDateByParticipantIdAsync(DateTime date, int participantId) {
-            return await FindByCondition(p => p.Timestamp.CompareTo(date) >= 0 && p.ParticipantId.Equals(participantId))
+        public async Task<IEnumerable<PhysiologicalSignal>> GetPhysiologicalSignalsAfterDateByParticipantIdAsync(DateTime fromDate, int participantId) {
+            return await FindByCondition(p => p.Timestamp.CompareTo(fromDate) >= 0 && p.ParticipantId.Equals(participantId))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<PhysiologicalSignal>> GetPhysiologicalSignalsInDateRangeByParticipantIdAsync(DateTime fromDate, DateTime toDate, int participantId) {
+            return await FindByCondition(p => p.Timestamp.CompareTo(fromDate) >= 0 && p.Timestamp.CompareTo(toDate) <= 0 && p.ParticipantId.Equals(participantId))
                 .ToListAsync();
         }
 

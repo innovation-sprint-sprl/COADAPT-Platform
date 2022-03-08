@@ -34,6 +34,45 @@ namespace Repository.ModelRepository {
 				.ToListAsync();
 		}
 
+		public async Task<IEnumerable<ParticipantListResponse>> GetAllParticipantsWithReportsAsync() {
+			return await FindByCondition(p => p.PsychologicalReports.Any())
+				.Include(participant => participant.User)
+				.Include(participant => participant.PsychologicalReports)
+				.Select(p => new ParticipantListResponse {
+					Id = p.Id,
+					Code = p.Code,
+					CreatedOn = p.CreatedOn,
+					Therapist = _coadaptContext.Therapists.Where(t => t.Id == p.TherapistId).Select(y => y.User.UserName).FirstOrDefault(),
+					PsychologicalReports = p.PsychologicalReports.Count,
+					Organizations = _coadaptContext.Organizations.Where(o => o.Studies.Any(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false))).Select(y => y.Name).ToList(),
+					Studies = _coadaptContext.Studies.Where(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
+					Sites = _coadaptContext.Sites.Where(st => st.Study.StudyParticipants.Any(sp => sp.SiteId == st.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
+					Groups = _coadaptContext.Groups.Where(g => g.Study.StudyParticipants.Any(sp => sp.GroupId == g.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList()
+				})
+				.ToListAsync();
+		}
+
+		public async Task<IEnumerable<ParticipantListResponse>> GetAllParticipantsWithMetricsAsync() {
+			return await FindByCondition(p => p.OuraActivities.Any() || p.PhysiologicalSignals.Any())
+				.Include(participant => participant.User)
+				.Include(participant => participant.OuraActivities)
+				.Include(participant => participant.OuraReadinesses)
+				.Include(participant => participant.OuraSleeps)
+				.Include(participant => participant.PhysiologicalSignals)
+				.Select(p => new ParticipantListResponse {
+					Id = p.Id,
+					Code = p.Code,
+					CreatedOn = p.CreatedOn,
+					Therapist = _coadaptContext.Therapists.Where(t => t.Id == p.TherapistId).Select(y => y.User.UserName).FirstOrDefault(),
+					PhychologicalMetrics = p.OuraActivities.Count + p.OuraReadinesses.Count + p.OuraSleeps.Count + p.PhysiologicalSignals.Count,
+					Organizations = _coadaptContext.Organizations.Where(o => o.Studies.Any(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false))).Select(y => y.Name).ToList(),
+					Studies = _coadaptContext.Studies.Where(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
+					Sites = _coadaptContext.Sites.Where(st => st.Study.StudyParticipants.Any(sp => sp.SiteId == st.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
+					Groups = _coadaptContext.Groups.Where(g => g.Study.StudyParticipants.Any(sp => sp.GroupId == g.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList()
+				})
+				.ToListAsync();
+		}
+
 		public async Task<IEnumerable<ParticipantListResponse>> GetParticipantListAsync() {
 			return await FindAll()
 				.Include(participant => participant.User)
@@ -61,11 +100,18 @@ namespace Repository.ModelRepository {
 		public async Task<ParticipantListResponse> GetParticipantListItemByIdAsync(int participantId) {
 			return await FindByCondition(p => p.Id.Equals(participantId))
 				.Include(p => p.User)
+				.Include(p => p.PsychologicalReports)
+				.Include(p => p.OuraActivities)
+				.Include(p => p.OuraReadinesses)
+				.Include(p => p.OuraSleeps)
+				.Include(p => p.PhysiologicalSignals)
 				.Select(p => new ParticipantListResponse {
 					Id = p.Id,
 					Code = p.Code,
 					CreatedOn = p.CreatedOn,
 					Therapist = _coadaptContext.Therapists.Where(t => t.Id == p.TherapistId).Select(y => y.User.UserName).FirstOrDefault(),
+					PsychologicalReports = p.PsychologicalReports.Count,
+					PhychologicalMetrics = p.OuraActivities.Count +p.OuraReadinesses.Count + p.OuraSleeps.Count + p.PhysiologicalSignals.Count,
 					Organizations = _coadaptContext.Organizations.Where(o => o.Studies.Any(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false))).Select(y => y.Name).ToList(),
 					Studies = _coadaptContext.Studies.Where(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
 					Sites = _coadaptContext.Sites.Where(st => st.Study.StudyParticipants.Any(sp => sp.SiteId == st.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
@@ -85,6 +131,64 @@ namespace Repository.ModelRepository {
 			return await FindByCondition(p => p.TherapistId.Equals(therapistId))
 				.Include(p => p.Therapist)
 				.ThenInclude(t => t.User)
+				.ToListAsync();
+		}
+
+		public async Task<IEnumerable<ParticipantListResponse>> GetParticipantsListByTherapistIdAsync(int therapistId) {
+			return await FindByCondition(p => p.TherapistId.Equals(therapistId))
+				.Include(p => p.Therapist)
+				.ThenInclude(t => t.User)
+				.Select(p => new ParticipantListResponse {
+					Id = p.Id,
+					Code = p.Code,
+					CreatedOn = p.CreatedOn,
+					Therapist = _coadaptContext.Therapists.Where(t => t.Id == p.TherapistId).Select(y => y.User.UserName).FirstOrDefault(),
+					Organizations = _coadaptContext.Organizations.Where(o => o.Studies.Any(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false))).Select(y => y.Name).ToList(),
+					Studies = _coadaptContext.Studies.Where(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
+					Sites = _coadaptContext.Sites.Where(st => st.Study.StudyParticipants.Any(sp => sp.SiteId == st.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
+					Groups = _coadaptContext.Groups.Where(g => g.Study.StudyParticipants.Any(sp => sp.GroupId == g.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList()
+				})
+				.ToListAsync();
+		}
+
+		public async Task<IEnumerable<ParticipantListResponse>> GetParticipantsWithReportsByTherapistIdAsync(int therapistId) {
+			return await FindByCondition(p => p.TherapistId.Equals(therapistId) && p.PsychologicalReports.Any())
+				.Include(p => p.Therapist)
+				.ThenInclude(t => t.User)
+				.Include(p => p.PsychologicalReports)
+				.Select(p => new ParticipantListResponse {
+					Id = p.Id,
+					Code = p.Code,
+					CreatedOn = p.CreatedOn,
+					Therapist = _coadaptContext.Therapists.Where(t => t.Id == p.TherapistId).Select(y => y.User.UserName).FirstOrDefault(),
+					PsychologicalReports = p.PsychologicalReports.Count,
+					Organizations = _coadaptContext.Organizations.Where(o => o.Studies.Any(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false))).Select(y => y.Name).ToList(),
+					Studies = _coadaptContext.Studies.Where(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
+					Sites = _coadaptContext.Sites.Where(st => st.Study.StudyParticipants.Any(sp => sp.SiteId == st.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
+					Groups = _coadaptContext.Groups.Where(g => g.Study.StudyParticipants.Any(sp => sp.GroupId == g.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList()
+				})
+				.ToListAsync();
+		}
+
+		public async Task<IEnumerable<ParticipantListResponse>> GetParticipantsWithMetricsByTherapistIdAsync(int therapistId) {
+			return await FindByCondition(p => p.TherapistId.Equals(therapistId) && (p.OuraActivities.Any() || p.PhysiologicalSignals.Any()))
+				.Include(p => p.Therapist)
+				.ThenInclude(t => t.User)
+				.Include(p => p.OuraActivities)
+				.Include(p => p.OuraReadinesses)
+				.Include(p => p.OuraSleeps)
+				.Include(p => p.PhysiologicalSignals)
+				.Select(p => new ParticipantListResponse {
+					Id = p.Id,
+					Code = p.Code,
+					CreatedOn = p.CreatedOn,
+					Therapist = _coadaptContext.Therapists.Where(t => t.Id == p.TherapistId).Select(y => y.User.UserName).FirstOrDefault(),
+					PhychologicalMetrics = p.OuraActivities.Count + p.OuraReadinesses.Count + p.OuraSleeps.Count + p.PhysiologicalSignals.Count,
+					Organizations = _coadaptContext.Organizations.Where(o => o.Studies.Any(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false))).Select(y => y.Name).ToList(),
+					Studies = _coadaptContext.Studies.Where(s => s.StudyParticipants.Any(sp => sp.StudyId == s.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
+					Sites = _coadaptContext.Sites.Where(st => st.Study.StudyParticipants.Any(sp => sp.SiteId == st.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList(),
+					Groups = _coadaptContext.Groups.Where(g => g.Study.StudyParticipants.Any(sp => sp.GroupId == g.Id && sp.ParticipantId == p.Id && sp.Abandoned == false)).Select(y => y.Name).ToList()
+				})
 				.ToListAsync();
 		}
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ApiModels {
 
-	public class ParticipantListResponse{
+	public class ParticipantListResponse {
 
 		public int Id { get; set; }
 
@@ -12,6 +12,9 @@ namespace ApiModels {
 		public DateTime CreatedOn { get; set; }
 
         public string Therapist { get; set; }
+
+        public int? PsychologicalReports { get; set; }
+        public int? PhychologicalMetrics { get; set; }
 
         public List<string> Organizations { get; set; }
 

@@ -22,6 +22,10 @@ namespace Repository.ModelRepository {
                 .SingleAsync();
         }
 
+        public bool Exists(int participantId, DateTime summaryDate) {
+            return FindByCondition(x => x.ParticipantId == participantId && x.SummaryDate == summaryDate).Any();
+        }
+
         public async Task<IEnumerable<OuraReadiness>> GetOuraReadinessesByParticipantIdAsync(int participantId) {
             return await FindByCondition(p => p.ParticipantId.Equals(participantId))
                 .ToListAsync();

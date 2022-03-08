@@ -48,6 +48,21 @@ namespace Repository.ModelRepository {
 				.ToListAsync();
 		}
 
+		public async Task<IEnumerable<StudyParticipant>> StudyParticipantsWithReportsByStudy(int studyId, bool? abandoned) {
+			return await FindByCondition(sp => sp.StudyId.Equals(studyId) && sp.Participant.PsychologicalReports.Any() && (abandoned != null ? sp.Abandoned.Equals(abandoned) : true))
+				.Include(sp => sp.Participant)
+				.ThenInclude(sp => sp.PsychologicalReports)
+				.ToListAsync();
+		}
+
+		public async Task<IEnumerable<StudyParticipant>> StudyParticipantsWithMetricsByStudy(int studyId, bool? abandoned) {
+			return await FindByCondition(sp => sp.StudyId.Equals(studyId) && (sp.Participant.OuraActivities.Any() || sp.Participant.PhysiologicalSignals.Any()) && (abandoned != null ? sp.Abandoned.Equals(abandoned) : true))
+				.Include(sp => sp.Participant)
+				.Include(sp => sp.Participant.OuraActivities)
+				.Include(sp => sp.Participant.PhysiologicalSignals)
+				.ToListAsync();
+		}
+
 		public async Task<IEnumerable<StudyParticipant>> StudyParticipantsBySite(int siteId, bool? abandoned) {
 			return await FindByCondition(sp => sp.SiteId.Equals(siteId) && (abandoned != null ? sp.Abandoned.Equals(abandoned) : true))
 				.ToListAsync();

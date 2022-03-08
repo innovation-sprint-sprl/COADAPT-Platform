@@ -1,34 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { ChartDataSets } from 'chart.js';
+import { BaseChartDirective, Color, Label } from 'ng2-charts';
+import { APIv1 } from 'src/app/constants';
+import { ParticipantList } from 'src/app/models';
+import { OuraActivity } from 'src/app/models/oura-activity';
+import { OuraReadiness } from 'src/app/models/oura-readiness';
+import { OuraSleep } from 'src/app/models/oura-sleep';
+import { RepositoryService } from 'src/app/services';
 
 import { DashboardService } from '../../dashboard.service';
-import { PeriodicElement } from '../../../models'
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-  { position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na' },
-  { position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg' },
-  { position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al' },
-  { position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si' },
-  { position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P' },
-  { position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S' },
-  { position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl' },
-  { position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar' },
-  { position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K' },
-  { position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca' },
-];
 
 @Component({
   selector: 'app-overall-physiological',
@@ -37,25 +18,230 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class OverallPhysiologicalComponent implements OnInit {
 
-  bigChart = [];
-  cards = [];
-  pieChart = [];
+  @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective>;
+  
+  constructor(private dashboardService: DashboardService, private titleService: Title, private repository: RepositoryService) { }
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  /* Steps settings */
+  public stepsChartData: ChartDataSets[] = [
+    { data: [0, 0, 0, 0, 0, 0, 0], label: 'Steps - Average', stack: 'a' },
+  ];
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  public stepsChartLabels: Label[] = ['Mon', 'Tue', 'Wen', 'Thu', 'Fr', 'Sut', 'Sun'];
 
-  constructor(private dashboardService: DashboardService, private titleService: Title) { }
+  public stepsChartOptions = {
+    responsive: true,
+    legend: {
+      display: true
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          callback: (value) => {
+            return value;
+          }
+        }
+      }]
+    }
+  };
+
+  public stepsChartColors: Color[] = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(255,0,0,0.28)'
+    },
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(0,176,240,0.28)'
+    },
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(0,0,0,0.28)'
+    }
+  ];
+
+  public stepsChartLegend = true;
+  public stepsChartPlugins = [];
+  public stepsChartType = 'bar';
+
+  /* Settings for calories */
+  public caloriesChartData: ChartDataSets[] = [ { data: [0, 0, 0, 0, 0, 0, 0], label: 'Calories - Average', stack: 'a' } ];
+  public caloriesChartLabels: Label[] = ['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sut', 'Sun'];
+  public caloriesChartOptions = {
+    responsive: true,
+    legend: {
+      display: true
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          callback: (value) => {
+            return value;
+          }
+        }
+      }]
+    }
+  };
+  public caloriesChartColors: Color[] = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(255,0,0,0.28)'
+    },
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(0,176,240,0.28)'
+    },
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(0,0,0,0.28)'
+    }
+  ];
+  public caloriesChartLegend = true;
+  public caloriesChartPlugins = [];
+  public caloriesChartType = 'bar';
+
+  /* Settings for readinesses */
+  public readinessesChartData: ChartDataSets[] = [ { data: [0, 0, 0, 0, 0, 0, 0], label: 'Score - Average', stack: 'a' } ];
+  public readinessesChartLabels: Label[] = ['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sut', 'Sun'];
+  public readinessesChartOptions = {
+    responsive: true,
+    legend: {
+      display: true
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          callback: (value) => {
+            return value;
+          }
+        }
+      }]
+    }
+  };
+  public readinessesChartColors: Color[] = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(255,0,0,0.28)'
+    },
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(0,176,240,0.28)'
+    },
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(0,0,0,0.28)'
+    }
+  ];
+  public readinessesChartLegend = true;
+  public readinessesChartPlugins = [];
+  public readinessesChartType = 'bar';
+
+  /* Settings for sleep */
+  public sleepChartData: ChartDataSets[] = [ { data: [0, 0, 0, 0, 0, 0, 0], label: 'Sleep - Average', stack: 'a' } ];
+  public sleepChartLabels: Label[] = ['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sut', 'Sun'];
+  public sleepChartOptions = {
+    responsive: true,
+    legend: {
+      display: true
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          callback: (value) => {
+            return value;
+          }
+        }
+      }]
+    }
+  };
+  public sleepChartColors: Color[] = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(255,0,0,0.28)'
+    },
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(0,176,240,0.28)'
+    },
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(0,0,0,0.28)'
+    }
+  ];
+  public sleepChartLegend = true;
+  public sleepChartPlugins = [];
+  public sleepChartType = 'bar';
+
 
   ngOnInit() {
-    this.bigChart = this.dashboardService.bigChart();
-    this.cards = this.dashboardService.cards();
-    this.pieChart = this.dashboardService.pieChart();
     this.titleService.setTitle('Overall Physiological | COADAPT');
-    this.paginator.pageSize = 10;
+
+    this.repository.getData(APIv1.participants + '/metrics-only').subscribe((res) => {
+        res = res as ParticipantList[];
+        let totalParticipants = res.length;
+
+        this.repository.getData(APIv1.ouraActivity).subscribe((res) => {
+          let items = res as OuraActivity[];
     
-    this.dataSource.paginator = this.paginator;
+          let steps = [0, 0, 0, 0, 0, 0, 0];
+          let calories = [0, 0, 0, 0, 0, 0, 0];
+    
+          items.forEach(item => {
+            let tmpDate = new Date(Date.parse(item.summaryDate));
+
+            steps[tmpDate.getDay()] += item.steps;
+            calories[tmpDate.getDay()] += item.caloriesTotal;
+          });
+    
+          for (let i = 0; i < steps.length; i++) {
+            steps[i] = +((steps[i] / totalParticipants).toString().substring(0, 3));
+          }
+
+          for (let i = 0; i < calories.length; i++) {
+            calories[i] = +((calories[i] / totalParticipants).toString().substring(0, 3));
+          }
+          
+          this.stepsChartData[0].data = steps;
+          this.caloriesChartData[0].data = calories;
+        });
+
+        this.repository.getData(APIv1.ouraReadiness).subscribe((res) => {
+          let items = res as OuraReadiness[];
+    
+          let readiness = [0, 0, 0, 0, 0, 0, 0];
+    
+          items.forEach(item => {
+            let tmpDate = new Date(Date.parse(item.summaryDate));
+            readiness[tmpDate.getDay()] += item.score;
+          });
+    
+          for (let i = 0; i < readiness.length; i++) {
+            readiness[i] = +((readiness[i] / totalParticipants).toString().substring(0, 3));
+          }
+          
+          this.readinessesChartData[0].data = readiness;
+        });
+
+        this.repository.getData(APIv1.ouraSleep).subscribe((res) => {
+          let items = res as OuraSleep[];
+    
+          let sleep = [0, 0, 0, 0, 0, 0, 0];
+    
+          items.forEach(item => {
+            let tmpDate = new Date(Date.parse(item.summaryDate));
+
+            let duration = item.duration / 3600;
+
+            sleep[tmpDate.getDay()] += duration;
+          });
+
+          for (let i = 0; i < sleep.length; i++) {
+            sleep[i] = +((sleep[i] / totalParticipants).toString().substring(0, 3));
+          }
+          
+          this.sleepChartData[0].data = sleep;
+        });
+    });
   }
 
 }

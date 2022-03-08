@@ -7,6 +7,7 @@ namespace Contracts.Repository.ModelRepository {
     public interface IOuraSleepRepository : IRepositoryBase<OuraSleep> {
         Task<IEnumerable<OuraSleep>> GetOuraSleepsAsync();
         Task<OuraSleep> GetOuraSleepByIdAsync(int id);
+        bool Exists(int participantId, DateTime summaryDate);
         Task<IEnumerable<OuraSleep>> GetOuraSleepsByParticipantIdAsync(int participantId);
         Task<IEnumerable<OuraSleep>> GetOuraSleepsByParticipantIdAndDateRangeAsync(
             int participantId, DateTime fromDate, DateTime toDate);

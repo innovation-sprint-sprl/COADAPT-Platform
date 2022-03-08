@@ -47,6 +47,8 @@ import {
   OverallPhysiologicalComponent,
   OverallPsychologicalComponent,
 } from './modules';
+import { IndividualPsychologicalReportsComponent } from './modules/individual/individual-psychological-reports/individual-psychological-reports.component';
+import { IndividualPhysiologicalMetricsComponent } from './modules/individual/individual-physiological-metrics/individual-physiological-metrics.component';
 
 const routes: Routes = [
   {
@@ -246,14 +248,26 @@ const routes: Routes = [
         path: 'individual/physiological',
         component: IndividualPhysiologicalComponent,
         canActivate: [AuthGuard],
-        data: { roles: [Role.Participant] }
+        data: { roles: [Role.Administrator, Role.SubAdministrator, Role.Supervisor, Role.Therapist] }
+      },
+      {
+        path: 'individual/physiological/:code',
+        component: IndividualPhysiologicalMetricsComponent,
+        canActivate: [AuthGuard],
+        data: { roles: [Role.Administrator, Role.SubAdministrator, Role.Supervisor, Role.Therapist] }
       },
       {
         path: 'individual/psychological',
         component: IndividualPsychologicalComponent,
         canActivate: [AuthGuard],
-        data: { roles: [Role.Participant] }
+        data: { roles: [Role.Administrator, Role.SubAdministrator, Role.Supervisor, Role.Therapist] }
       },
+      {
+        path: 'individual/psychological/:code',
+        component: IndividualPsychologicalReportsComponent,
+        canActivate: [AuthGuard],
+        data: { roles: [Role.Administrator, Role.SubAdministrator, Role.Supervisor, Role.Therapist] }
+      }
     ],
   },
   {

@@ -237,10 +237,15 @@ namespace UserManagement.WebAPI.Controllers {
 					return BadRequest("A therapist can create only oura readinesses of monitored participants");
 				}
 			}
+
 			var ouraReadiness = new OuraReadiness();
-			ouraReadiness.FromRequest(ouraReadinessRequest);
-			_coadaptService.OuraReadiness.CreateOuraReadiness(ouraReadiness);
-			await _coadaptService.SaveAsync();
+
+			if (!_coadaptService.OuraReadiness.Exists(ouraReadinessRequest.ParticipantId, ouraReadinessRequest.SummaryDate)) {
+				ouraReadiness.FromRequest(ouraReadinessRequest);
+				_coadaptService.OuraReadiness.CreateOuraReadiness(ouraReadiness);
+				await _coadaptService.SaveAsync();
+			}
+			
 			return CreatedAtRoute("OuraReadinessById", new { id = ouraReadiness.Id }, ouraReadiness);
 		}
 

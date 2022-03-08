@@ -33,6 +33,7 @@ namespace Repository.ModelRepository {
 
         public async Task<IEnumerable<PsychologicalReport>> GetPsychologicalReportsAfterDateByParticipantIdAsync(DateTime date, int participantId) {
             return await FindByCondition(p => p.DateOfReport.CompareTo(date) >= 0 && p.ParticipantId.Equals(participantId))
+                .OrderByDescending(p => p.DateOfReport)
                 .Include(p => p.Participant)
                 .ToListAsync();
         }
@@ -58,6 +59,7 @@ namespace Repository.ModelRepository {
 
         public async Task<IEnumerable<PsychologicalReport>> GetPsychologicalReportsByParticipantIdAsync(int participantId) {
             return await FindByCondition(p => p.ParticipantId.Equals(participantId))
+                .OrderByDescending(p => p.DateOfReport)
                 .Include(p => p.Participant)
                 .ToListAsync();
         }

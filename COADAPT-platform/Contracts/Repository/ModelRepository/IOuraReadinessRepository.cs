@@ -7,6 +7,7 @@ namespace Contracts.Repository.ModelRepository {
     public interface IOuraReadinessRepository : IRepositoryBase<OuraReadiness> {
         Task<IEnumerable<OuraReadiness>> GetOuraReadinessesAsync();
         Task<OuraReadiness> GetOuraReadinessByIdAsync(int id);
+        bool Exists(int participantId, DateTime summaryDate);
         Task<IEnumerable<OuraReadiness>> GetOuraReadinessesByParticipantIdAsync(int participantId);
         Task<IEnumerable<OuraReadiness>> GetOuraReadinessesByParticipantIdAndDateRangeAsync(
             int participantId, DateTime fromDate, DateTime toDate);

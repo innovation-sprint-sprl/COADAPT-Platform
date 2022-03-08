@@ -40,6 +40,21 @@ namespace Repository.ModelRepository {
 				.ToListAsync();
 		}
 
+		public async Task<IEnumerable<SupervisorListResponse>> GetAllSupervisorsAsync(int organizationId) {
+			return await FindByCondition(supervisor => supervisor.Studies.Any(study => study.OrganizationId == organizationId))
+				.Include(supervisor => supervisor.User)
+				.Include(supervisor => supervisor.Studies)
+				.Select(x => new SupervisorListResponse {
+					Id = x.Id,
+					UserName = x.User.UserName,
+					CreatedOn = x.CreatedOn,
+					Organizations = _coadaptContext.Organizations.Where(o => o.Studies.Any(s => s.OrganizationId == o.Id && s.SupervisorId == x.Id)).Select(y => y.Name).ToList(),
+					Studies = _coadaptContext.Studies.Where(s => s.SupervisorId == x.Id).Select(y => y.Name).ToList(),
+					Participants = _coadaptContext.StudyParticipants.Where(sp => sp.Study.SupervisorId == x.Id && sp.Abandoned == false).Count()
+				})
+				.ToListAsync();
+		}
+
 		public async Task<Supervisor> GetSupervisorByIdAsync(int supervisorId) {
 			return await FindByCondition(super => super.Id.Equals(supervisorId))
 				//.Include(super => super.User)

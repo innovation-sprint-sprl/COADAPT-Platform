@@ -45,7 +45,19 @@ namespace UserManagement.WebAPI.Controllers {
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public async Task<IActionResult> GetAllSupervisors() {
-			return Ok(await _coadaptService.Supervisor.GetAllSupervisorsAsync());
+			string role = HttpContext.User.Claims.Single(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value;
+			string userId = HttpContext.User.Claims.Single(x => x.Type == "id").Value;
+
+			if (role == Role.AdministratorRole) {
+				return Ok(await _coadaptService.Supervisor.GetAllSupervisorsAsync());
+			} else if (role == Role.SubAdministratorRole) {
+				var subAdministrator = await _coadaptService.SubAdministrator.GetSubAdministratorByUserIdAsync(userId);
+				var organization = await _coadaptService.Organization.GetOrganizationBySubAdministratorIdAsync(subAdministrator.Id);
+				return Ok(await _coadaptService.Supervisor.GetAllSupervisorsAsync(organization.Id));
+			}
+
+			_logger.LogWarn($"GetAllSupervisors: Currently logged in user is not authorized!");
+			return Unauthorized("Currently logged in user is not authorized");
 		}
 
 		/// <summary>

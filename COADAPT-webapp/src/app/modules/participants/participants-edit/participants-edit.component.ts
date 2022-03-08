@@ -148,9 +148,20 @@ export class ParticipantsEditComponent implements OnInit {
         this.selectedGroups[i] = participant.studyParticipants[i]?.groupId;
         this.getAllForms().controls[i].get('groupId').setValue(this.selectedGroups[i]);
       
-        this.participationStatuses[i] = participant.studyParticipants[i]?.abandoned;
         this.getAllForms().controls[i].get('siteId').disable();
         this.getAllForms().controls[i].get('groupId').disable();
+
+        //If the participation end date has passed, this participation is considered abandoned.
+        let endDate = new Date(participant.studyParticipants[i]?.endDate);
+        let defaultDate = new Date('0001-01-01T00:00:00');
+        
+        if (participant.studyParticipants[i]?.endDate != null && endDate.getTime() !== defaultDate.getTime()) {
+          let today = new Date();
+          if (endDate < today) {
+            participant.studyParticipants[i].abandoned = true;
+          }
+        }
+        this.participationStatuses[i] = participant.studyParticipants[i]?.abandoned;
       }
 
       this.convertNullToEmptyValues();

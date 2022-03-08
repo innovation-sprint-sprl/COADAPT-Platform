@@ -7,7 +7,9 @@ namespace Contracts.Repository.ModelRepository {
 	public interface IStudyParticipantRepository : IRepositoryBase<StudyParticipant> {
 
 		Task<IEnumerable<StudyParticipant>> StudyParticipantsByStudy(int studyId, bool? abandoned = null);
-		Task<IEnumerable<StudyParticipant>> StudyParticipantsByParticipant(int participantId);
+        Task<IEnumerable<StudyParticipant>> StudyParticipantsWithReportsByStudy(int studyId, bool? abandoned = null);
+        Task<IEnumerable<StudyParticipant>> StudyParticipantsWithMetricsByStudy(int studyId, bool? abandoned = null);
+        Task<IEnumerable<StudyParticipant>> StudyParticipantsByParticipant(int participantId);
         Task<IEnumerable<StudyParticipant>> StudyParticipantsByStudyAndParticipant(int studyId, int participantId);
         Task<IEnumerable<StudyParticipant>> StudyParticipantsBySite(int siteId, bool? abandoned = null);
         Task<IEnumerable<StudyParticipant>> StudyParticipantsByGroup(int groupId, bool? abandoned = null);

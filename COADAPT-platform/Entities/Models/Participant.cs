@@ -32,6 +32,11 @@ namespace Entities.Models {
 		public int? TherapistId { get; set; }
 		public virtual Therapist Therapist { get; set; }
 		public ICollection<StudyParticipant> StudyParticipants { get; set; }
+		public ICollection<PsychologicalReport> PsychologicalReports { get; set; }
+		public ICollection<OuraActivity> OuraActivities { get; set; }
+		public ICollection<OuraReadiness> OuraReadinesses { get; set; }
+		public ICollection<OuraSleep> OuraSleeps { get; set; }
+		public ICollection<PhysiologicalSignal> PhysiologicalSignals { get; set; }
 
 	}
 }

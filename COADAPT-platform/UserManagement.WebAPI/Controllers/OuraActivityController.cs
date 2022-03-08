@@ -108,6 +108,7 @@ namespace UserManagement.WebAPI.Controllers {
 		/// </remarks>
 		/// <param name="code"></param>
 		/// <param name="fromDate"></param>
+		/// <param name="toDate"></param>
 		[HttpGet("participant/{code}")]
 		[ProducesResponseType(typeof(OuraActivity), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -135,8 +136,8 @@ namespace UserManagement.WebAPI.Controllers {
 				}
 			}
 			return fromDate == DateTime.MinValue ?
-				Ok(await _coadaptService.OuraActivity.GetOuraActivitiesByParticipantIdAsync(participant.Id)) :
-				Ok(await _coadaptService.OuraActivity.GetOuraActivitiesByParticipantIdAndDateRangeAsync(participant.Id, fromDate, toDate));
+				Ok((await _coadaptService.OuraActivity.GetOuraActivitiesByParticipantIdAsync(participant.Id)).OrderBy(x => x.SummaryDate)) :
+				Ok((await _coadaptService.OuraActivity.GetOuraActivitiesByParticipantIdAndDateRangeAsync(participant.Id, fromDate, toDate)).OrderBy(x => x.SummaryDate));
 		}
 
 		/// <summary>
@@ -237,10 +238,15 @@ namespace UserManagement.WebAPI.Controllers {
 					return BadRequest("A therapist can create only oura activities of monitored participants");
 				}
 			}
+
 			var ouraActivity = new OuraActivity();
-			ouraActivity.FromRequest(ouraActivityRequest);
-			_coadaptService.OuraActivity.CreateOuraActivity(ouraActivity);
-			await _coadaptService.SaveAsync();
+
+			if (!_coadaptService.OuraActivity.Exists(ouraActivityRequest.ParticipantId, ouraActivityRequest.SummaryDate)) {
+				ouraActivity.FromRequest(ouraActivityRequest);
+				_coadaptService.OuraActivity.CreateOuraActivity(ouraActivity);
+				await _coadaptService.SaveAsync();
+			}
+			
 			return CreatedAtRoute("OuraActivityById", new { id = ouraActivity.Id }, ouraActivity);
 		}
 

@@ -22,8 +22,15 @@
     margin-bottom: 0em;
   }
 
+  .menu-header {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
   .sub-menu-header {
     font-size: 16px;
+    font-style: italic;
+    font-weight: bold;
   }
 
   .sub-menu-icon {
@@ -36,6 +43,6 @@
   }
 
   .mat-list-item {
-    height: 38px;
+    height: 34px;
   }
 }

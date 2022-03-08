@@ -83,7 +83,111 @@ namespace UserManagement.WebAPI.Controllers {
 			}
 			// Requesting user is a therapist
 			var requestingTherapist = await _coadaptService.Therapist.GetTherapistByUserIdAsync(userId);
-			return Ok(await _coadaptService.Participant.GetParticipantsByTherapistIdAsync(requestingTherapist.Id));
+			return Ok(await _coadaptService.Participant.GetParticipantsListByTherapistIdAsync(requestingTherapist.Id));
+		}
+
+		/// <summary>
+		/// Retrieve participants with at least one report
+		/// </summary>
+		/// <remarks>
+		/// Remarks:
+		/// - Only administrators, sub-administrators, supervisors or therapists can retrieve all participants
+		/// -- Administrators can retrieve all participants
+		/// -- Sub-administrators only retrieve participants to sites of their organization
+		/// -- Supervisors only retrieve participants to sites of their studies
+		/// -- Therapists only retrieve participants assigned to them
+		/// </remarks>
+		[Authorize(Policy = "Therapist")]
+		[HttpGet("reports-only")]
+		[ProducesResponseType(typeof(ParticipantListResponse), StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		public async Task<IActionResult> GetAllParticipantsWithReports() {
+			string userId = HttpContext.User.Claims.Single(x => x.Type == "id").Value;
+			string role = HttpContext.User.Claims.Single(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value;
+			_logger.LogInfo(role);
+			if (role == Role.AdministratorRole) {
+				return Ok(await _coadaptService.Participant.GetAllParticipantsWithReportsAsync());
+			}
+			if (role == Role.SubAdministratorRole || role == Role.SupervisorRole) {
+				List<Study> studies = new List<Study>();
+				if (role == Role.SubAdministratorRole) {
+					var requestingSubAdmin = await _coadaptService.SubAdministrator.GetSubAdministratorByUserIdAsync(userId);
+					var organization = await _coadaptService.Organization.GetOrganizationBySubAdministratorIdAsync(requestingSubAdmin.Id);
+					studies.AddRange(await _coadaptService.Study.GetStudiesByOrganizationIdAsync(organization.Id));
+				} else {
+					var requestingSupervisor = await _coadaptService.Supervisor.GetSupervisorByUserIdAsync(userId);
+					studies.AddRange(await _coadaptService.Study.GetStudiesBySupervisorIdAsync(requestingSupervisor.Id));
+				}
+				List<StudyParticipant> studyParticipants = new List<StudyParticipant>();
+				foreach (var study in studies) {
+					studyParticipants.AddRange(await _coadaptService.StudyParticipant.StudyParticipantsWithReportsByStudy(study.Id, false));
+				}
+				IList<ParticipantListResponse> participants = new List<ParticipantListResponse>();
+				foreach (var studyParticipant in studyParticipants) {
+					var participant = await _coadaptService.Participant.GetParticipantListItemByIdAsync(studyParticipant.ParticipantId);
+					if (!participants.Contains(participant)) {
+						participants.Add(participant);
+					}
+				}
+				return Ok(participants);
+			}
+			// Requesting user is a therapist
+			var requestingTherapist = await _coadaptService.Therapist.GetTherapistByUserIdAsync(userId);
+			return Ok(await _coadaptService.Participant.GetParticipantsWithReportsByTherapistIdAsync(requestingTherapist.Id));
+		}
+
+		/// <summary>
+		/// Retrieve participants with at least one report
+		/// </summary>
+		/// <remarks>
+		/// Remarks:
+		/// - Only administrators, sub-administrators, supervisors or therapists can retrieve all participants
+		/// -- Administrators can retrieve all participants
+		/// -- Sub-administrators only retrieve participants to sites of their organization
+		/// -- Supervisors only retrieve participants to sites of their studies
+		/// -- Therapists only retrieve participants assigned to them
+		/// </remarks>
+		[Authorize(Policy = "Therapist")]
+		[HttpGet("metrics-only")]
+		[ProducesResponseType(typeof(ParticipantListResponse), StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		public async Task<IActionResult> GetAllParticipantsWithMetrics() {
+			string userId = HttpContext.User.Claims.Single(x => x.Type == "id").Value;
+			string role = HttpContext.User.Claims.Single(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value;
+			_logger.LogInfo(role);
+			if (role == Role.AdministratorRole) {
+				return Ok(await _coadaptService.Participant.GetAllParticipantsWithMetricsAsync());
+			}
+			if (role == Role.SubAdministratorRole || role == Role.SupervisorRole) {
+				List<Study> studies = new List<Study>();
+				if (role == Role.SubAdministratorRole) {
+					var requestingSubAdmin = await _coadaptService.SubAdministrator.GetSubAdministratorByUserIdAsync(userId);
+					var organization = await _coadaptService.Organization.GetOrganizationBySubAdministratorIdAsync(requestingSubAdmin.Id);
+					studies.AddRange(await _coadaptService.Study.GetStudiesByOrganizationIdAsync(organization.Id));
+				} else {
+					var requestingSupervisor = await _coadaptService.Supervisor.GetSupervisorByUserIdAsync(userId);
+					studies.AddRange(await _coadaptService.Study.GetStudiesBySupervisorIdAsync(requestingSupervisor.Id));
+				}
+				List<StudyParticipant> studyParticipants = new List<StudyParticipant>();
+				foreach (var study in studies) {
+					studyParticipants.AddRange(await _coadaptService.StudyParticipant.StudyParticipantsWithMetricsByStudy(study.Id, false));
+				}
+				IList<ParticipantListResponse> participants = new List<ParticipantListResponse>();
+				foreach (var studyParticipant in studyParticipants) {
+					var participant = await _coadaptService.Participant.GetParticipantListItemByIdAsync(studyParticipant.ParticipantId);
+					if (!participants.Contains(participant)) {
+						participants.Add(participant);
+					}
+				}
+				return Ok(participants);
+			}
+			// Requesting user is a therapist
+			var requestingTherapist = await _coadaptService.Therapist.GetTherapistByUserIdAsync(userId);
+			return Ok(await _coadaptService.Participant.GetParticipantsWithMetricsByTherapistIdAsync(requestingTherapist.Id));
 		}
 
 		/// <summary>
@@ -188,6 +292,44 @@ namespace UserManagement.WebAPI.Controllers {
 			}
 			participant.StudyParticipants = (ICollection<StudyParticipant>)await _coadaptService.StudyParticipant.StudyParticipantsByParticipant(participant.Id);
 			return Ok(participant);
+		}
+
+		/// <summary>
+		///	Retrieve the participant details with given code
+		/// </summary>
+		/// <remarks>
+		/// Remarks:
+		/// - Only administrators, sub-administrators, supervisors or therapists can retrieve a participant by code
+		/// </remarks>
+		/// <param name="code"></param>
+		[Authorize(Policy = "Therapist")]
+		[HttpGet("details/{code}", Name = "ParticipantDetailsByCode")]
+		[ProducesResponseType(typeof(Participant), StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		public async Task<IActionResult> GetParticipantDetailsByCode(string code) {
+			var participant = await _coadaptService.Participant.GetParticipantByCodeAsync(code);
+			
+			if (participant.IsEmptyObject()) {
+				_logger.LogWarn($"GetParticipantDetailsByCode: Participant with code {code} not found!");
+				return NotFound("Participant with requested code does not exist");
+			}
+
+			string role = HttpContext.User.Claims.Single(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value;
+
+			if (role == Role.TherapistRole) {
+				string userId = HttpContext.User.Claims.Single(x => x.Type == "id").Value;
+				var therapist = await _coadaptService.Therapist.GetTherapistByUserIdAsync(userId);
+
+				if (participant.TherapistId != therapist.Id) {
+					_logger.LogWarn($"GetParticipantDetailsByCode: Therapist with userId {userId} is not responible for patient with code {code}!");
+					return Unauthorized("Therapist is not responible for that patient");
+				}
+			}
+
+			return Ok(_coadaptService.Participant.GetParticipantListItemByIdAsync(participant.Id));
 		}
 
 		/// <summary>

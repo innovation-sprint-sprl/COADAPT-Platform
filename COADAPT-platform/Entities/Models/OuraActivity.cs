@@ -43,13 +43,13 @@ namespace Entities.Models {
         public int MetMinMedium { get; set; }
         public int MetMinMediumPlus { get; set; }
         public int MetMinHigh { get; set; }
-        public int AverageMet { get; set; }
+        public float AverageMet { get; set; }
         public string Class5Min { get; set; }
         public string Met1Min { get; set; }
-        public int TargetCalories { get; set; }
-        public int TargetKm { get; set; }
-        public int TargetMiles { get; set; }
-        public int ToTargetKm { get; set; }
-        public int ToTargetMiles { get; set; }
+        public float TargetCalories { get; set; }
+        public float TargetKm { get; set; }
+        public float TargetMiles { get; set; }
+        public float ToTargetKm { get; set; }
+        public float ToTargetMiles { get; set; }
     }
 }

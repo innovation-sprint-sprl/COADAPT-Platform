@@ -7,6 +7,7 @@ namespace Contracts.Repository.ModelRepository {
 	public interface ISupervisorRepository : IRepositoryBase<Supervisor> {
 
 		Task<IEnumerable<SupervisorListResponse>> GetAllSupervisorsAsync();
+		Task<IEnumerable<SupervisorListResponse>> GetAllSupervisorsAsync(int organizationId);
 		Task<Supervisor> GetSupervisorByIdAsync(int supervisorId);
 		Task<Supervisor> GetSupervisorByUserIdAsync(string supervisorUserId);
 		void CreateSupervisor(Supervisor supervisor);

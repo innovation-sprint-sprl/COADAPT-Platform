@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ApiModels {
 	public class PsychologicalReportRequest {
 		[Required]
 		public int ParticipantId { get; set; }
+		public DateTime DateOfReport { get; set; }
 		public int IntrinsicFactorsOfWork { get; set; }
 		public int ManagerialRole { get; set; }
 		public int RelationshipWithOtherPeople { get; set; }

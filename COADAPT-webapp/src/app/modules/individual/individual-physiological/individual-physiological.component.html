@@ -1,76 +1,47 @@
-<div>
-  <app-widget-area [data]="bigChart"></app-widget-area>
-</div>
-
-<br>
-
-<mat-divider></mat-divider>
-
-<br>
-
-<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px" class="stats-cards">
-  <mat-card fxFlex="25">
-      <app-widget-card label="New Users" total="12k" percentage="50" [data]="cards"></app-widget-card>
-  </mat-card>
-  <mat-card fxFlex="25">
-      <app-widget-card label="Users retention" total="10k" percentage="40" [data]="cards"></app-widget-card>
-  </mat-card>
-  <mat-card fxFlex="25">
-      <app-widget-card label="Users engagement" total="8k" percentage="30" [data]="cards"></app-widget-card>
-  </mat-card>
-  <mat-card fxFlex="25">
-      <app-widget-card label="Referral" total="6k" percentage="20" [data]="cards"></app-widget-card>
-  </mat-card>
-</div>
-
-<br>
-
-<mat-divider></mat-divider>
-
-<br>
-
-<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px">
-  <div fxFlex="60">
-      <div class="mat-elevation-z8">
-          <table mat-table [dataSource]="dataSource">
-
-              <!-- Position Column -->
-              <ng-container matColumnDef="position">
-                  <th mat-header-cell *matHeaderCellDef> No. </th>
-                  <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-              </ng-container>
-
-              <!-- Name Column -->
-              <ng-container matColumnDef="name">
-                  <th mat-header-cell *matHeaderCellDef> Name </th>
-                  <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-              </ng-container>
-
-              <!-- Weight Column -->
-              <ng-container matColumnDef="weight">
-                  <th mat-header-cell *matHeaderCellDef> Weight </th>
-                  <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
-              </ng-container>
-
-              <!-- Symbol Column -->
-              <ng-container matColumnDef="symbol">
-                  <th mat-header-cell *matHeaderCellDef> Symbol </th>
-                  <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-
-          <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
-      </div>
-
+<div fxFlex="100">
+    <div class="mat-elevation-z8">
+      <table mat-table matSort matSortActive="code" matSortDirection="asc" [dataSource]="dataSource">
+  
+        <ng-container matColumnDef="code">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Code </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{ user.code }} </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="therapist">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Therapist </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{ (user.therapist) ? user.therapist : ''}} </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="organizations">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Organizations </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{ (user.organizations) ? user.organizations.join(', ') : ''}} </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="studies">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Studies </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{ (user.studies) ? user.studies.join(', ') : ''}} </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="sites">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Sites </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{ (user.sites) ? user.sites.join(', ') : ''}} </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="groups">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Groups </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{ (user.groups) ? user.groups.join(', ') : ''}} </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="phychologicalMetrics">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Metrics </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{ user.phychologicalMetrics }} </mat-cell>
+        </ng-container>
+  
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="getParticipantMetrics(row.code)"></mat-row>
+      </table>
+  
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+    </div>
   </div>
-  <div fxFlex="40">
-      <app-widget-pie [data]="pieChart"></app-widget-pie>
-  </div>
-</div>
-
-<br>
-<br>
-<br>
+  

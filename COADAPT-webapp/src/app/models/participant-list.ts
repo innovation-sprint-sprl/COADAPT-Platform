@@ -3,6 +3,8 @@ export interface ParticipantList {
   code: string;
   createdOn: Date;
   therapist: string;
+  psychologicalReports: number,
+  phychologicalMetrics: number,
   organizations: string[];
   studies: string[];
   sites: string[];

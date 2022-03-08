@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiURL: 'https://api.coadapt-project.eu',
-  // apiURL: 'http://localhost:5000',
+  //apiURL: 'https://api.coadapt-project.eu',
+  apiURL: 'http://localhost:5000',
 };
 
 /*

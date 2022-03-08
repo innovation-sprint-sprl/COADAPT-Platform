@@ -100,7 +100,7 @@ namespace Entities.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AverageMet");
+                    b.Property<float>("AverageMet");
 
                     b.Property<int>("CaloriesActive");
 
@@ -163,17 +163,17 @@ namespace Entities.Migrations
                     b.Property<DateTime>("SummaryDate")
                         .HasColumnType("DATETIME");
 
-                    b.Property<int>("TargetCalories");
+                    b.Property<float>("TargetCalories");
 
-                    b.Property<int>("TargetKm");
+                    b.Property<float>("TargetKm");
 
-                    b.Property<int>("TargetMiles");
+                    b.Property<float>("TargetMiles");
 
                     b.Property<int>("TimezoneOffset");
 
-                    b.Property<int>("ToTargetKm");
+                    b.Property<float>("ToTargetKm");
 
-                    b.Property<int>("ToTargetMiles");
+                    b.Property<float>("ToTargetMiles");
 
                     b.HasKey("Id");
 
@@ -829,7 +829,7 @@ namespace Entities.Migrations
             modelBuilder.Entity("Entities.Models.OuraActivity", b =>
                 {
                     b.HasOne("Entities.Models.Participant", "Participant")
-                        .WithMany()
+                        .WithMany("OuraActivities")
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -837,7 +837,7 @@ namespace Entities.Migrations
             modelBuilder.Entity("Entities.Models.OuraReadiness", b =>
                 {
                     b.HasOne("Entities.Models.Participant", "Participant")
-                        .WithMany()
+                        .WithMany("OuraReadinesses")
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -845,7 +845,7 @@ namespace Entities.Migrations
             modelBuilder.Entity("Entities.Models.OuraSleep", b =>
                 {
                     b.HasOne("Entities.Models.Participant", "Participant")
-                        .WithMany()
+                        .WithMany("OuraSleeps")
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -864,7 +864,7 @@ namespace Entities.Migrations
             modelBuilder.Entity("Entities.Models.PhysiologicalSignal", b =>
                 {
                     b.HasOne("Entities.Models.Participant", "Participant")
-                        .WithMany()
+                        .WithMany("PhysiologicalSignals")
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -872,7 +872,7 @@ namespace Entities.Migrations
             modelBuilder.Entity("Entities.Models.PsychologicalReport", b =>
                 {
                     b.HasOne("Entities.Models.Participant", "Participant")
-                        .WithMany()
+                        .WithMany("PsychologicalReports")
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

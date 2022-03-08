@@ -108,12 +108,13 @@ namespace UserManagement.WebAPI.Controllers {
 		/// </remarks>
 		/// <param name="code"></param>
 		/// <param name="fromDate"></param>
+		/// /// <param name="toDate"></param>
 		[HttpGet("participant/{code}")]
 		[ProducesResponseType(typeof(PhysiologicalSignal), StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public async Task<IActionResult> GetAllPhysiologicalSignalsOfParticipant(string code, [FromQuery(Name = "fromDate")] DateTime fromDate) {
+		public async Task<IActionResult> GetAllPhysiologicalSignalsOfParticipant(string code, [FromQuery(Name = "fromDate")] DateTime fromDate, [FromQuery(Name = "toDate")] DateTime toDate) {
 			string userId = HttpContext.User.Claims.Single(x => x.Type == "id").Value;
 			string role = HttpContext.User.Claims.Single(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value;
 			var participant = await _coadaptService.Participant.GetParticipantByCodeAsync(code);
@@ -135,8 +136,8 @@ namespace UserManagement.WebAPI.Controllers {
 				}
 			}
 			return fromDate == DateTime.MinValue ?
-				Ok(await _coadaptService.PhysiologicalSignal.GetPhysiologicalSignalsByParticipantIdAsync(participant.Id)) :
-				Ok(await _coadaptService.PhysiologicalSignal.GetPhysiologicalSignalsAfterDateByParticipantIdAsync(fromDate, participant.Id));
+				Ok((await _coadaptService.PhysiologicalSignal.GetPhysiologicalSignalsByParticipantIdAsync(participant.Id)).OrderBy(x => x.Type).ThenBy(x => x.Timestamp).ToList()) :
+				Ok((await _coadaptService.PhysiologicalSignal.GetPhysiologicalSignalsInDateRangeByParticipantIdAsync(fromDate, toDate, participant.Id)).OrderBy(x => x.Type).ThenBy(x => x.Timestamp).ToList());
 		}
 
 		/// <summary>
@@ -237,10 +238,15 @@ namespace UserManagement.WebAPI.Controllers {
 					return BadRequest("A therapist can create only psychological signals of monitored participants");
 				}
 			}
+
 			var physiologicalSignal = new PhysiologicalSignal();
-			physiologicalSignal.FromRequest(physiologicalSignalRequest);
-			_coadaptService.PhysiologicalSignal.CreatePhysiologicalSignal(physiologicalSignal);
-			await _coadaptService.SaveAsync();
+
+			if (!_coadaptService.PhysiologicalSignal.Exists(physiologicalSignalRequest.ParticipantId, physiologicalSignalRequest.Timestamp)) {
+				physiologicalSignal.FromRequest(physiologicalSignalRequest);
+				_coadaptService.PhysiologicalSignal.CreatePhysiologicalSignal(physiologicalSignal);
+				await _coadaptService.SaveAsync();
+			}
+
 			return CreatedAtRoute("PhysiologicalSignalById", new { id = physiologicalSignal.Id }, physiologicalSignal);
 		}
 

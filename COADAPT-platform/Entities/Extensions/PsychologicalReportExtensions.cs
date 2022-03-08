@@ -61,6 +61,7 @@ namespace Entities.Extensions {
 
         public static void FromRequest(this PsychologicalReport psychologicalReport, PsychologicalReportRequest request) {
             psychologicalReport.ParticipantId = request.ParticipantId;
+            psychologicalReport.DateOfReport = request.DateOfReport;
             psychologicalReport.IntrinsicFactorsOfWork = request.IntrinsicFactorsOfWork;
             psychologicalReport.ManagerialRole = request.ManagerialRole;
             psychologicalReport.RelationshipWithOtherPeople = request.RelationshipWithOtherPeople;
